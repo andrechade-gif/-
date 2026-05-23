@@ -1,0 +1,387 @@
+/* ============================================================
+   DOUTOR-AI · PDF 2 · CICLO DA RECEITA
+   Estilos adicionais sobre o sistema do PDF institucional
+   ============================================================ */
+
+@import url("style.css");
+
+/* ============ PDF2 BADGE ============ */
+.pdf2-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue-brand);
+  background: var(--blue-pale);
+  padding: 5px 10px;
+  border: 1px solid var(--blue-light);
+  font-weight: 600;
+}
+.cover .pdf2-badge {
+  background: rgba(255,255,255,0.12);
+  color: var(--white);
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* ============ CICLO DIAGRAM ============ */
+.ciclo-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  margin-top: 22px;
+}
+.ciclo-flow .stage {
+  flex: 1;
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  padding: 12px 10px 14px;
+  position: relative;
+  text-align: left;
+}
+.ciclo-flow .stage.accent {
+  background: var(--blue-brand);
+  border-color: var(--blue-brand);
+}
+.ciclo-flow .stage.accent .n,
+.ciclo-flow .stage.accent .ttl { color: var(--white); }
+.ciclo-flow .stage .n {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  color: var(--blue-brand);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.ciclo-flow .stage .ttl {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  line-height: 1.2;
+  color: var(--chumbo);
+  letter-spacing: -0.01em;
+}
+
+/* ============ MAPA DO CICLO (7 blocos com bullets) ============ */
+.ciclo-block {
+  border: 1px solid var(--gray-300);
+  padding: 14px 16px;
+  background: var(--white);
+}
+.ciclo-block .head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--gray-300);
+  margin-bottom: 10px;
+}
+.ciclo-block .head .badge {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  color: var(--blue-brand);
+  background: var(--blue-pale);
+  padding: 3px 7px;
+  letter-spacing: 0.1em;
+}
+.ciclo-block .head .ttl {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.02em;
+  color: var(--chumbo);
+}
+.ciclo-block ul { list-style: none; padding: 0; margin: 0; }
+.ciclo-block li {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--gray-700);
+  padding-left: 11px;
+  position: relative;
+  margin-bottom: 4px;
+}
+.ciclo-block li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 6px;
+  width: 4px; height: 4px;
+  background: var(--blue-brand);
+  border-radius: 50%;
+}
+
+/* ============ PAIN → SOLUTION CARD ============ */
+.ps-card {
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ps-card .pain {
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--gray-300);
+}
+.ps-card .lab {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.ps-card .pain .lab { color: var(--gray-500); }
+.ps-card .sol  .lab { color: var(--blue-brand); }
+.ps-card .pain .txt,
+.ps-card .sol  .txt {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--chumbo);
+}
+.ps-card .sol .txt strong { font-weight: 600; }
+
+/* ============ AGENT CARD ============ */
+.agent {
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  padding: 14px 16px;
+}
+.agent .head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px;
+}
+.agent .ico {
+  width: 26px; height: 26px;
+  background: var(--blue-pale);
+  color: var(--blue-brand);
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.agent .name {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.015em;
+  color: var(--chumbo);
+}
+.agent ul { list-style: none; padding: 0; margin: 0; }
+.agent li {
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: var(--gray-700);
+  padding-left: 11px;
+  position: relative;
+  margin-bottom: 3px;
+}
+.agent li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 6px;
+  width: 4px; height: 4px;
+  background: var(--blue-brand);
+  border-radius: 50%;
+}
+
+/* ============ ARQUITETURA (4 colunas com setas) ============ */
+.arch {
+  display: grid;
+  grid-template-columns: 1.1fr 0.3fr 1.1fr 0.3fr 1.1fr 0.3fr 1.1fr;
+  align-items: stretch;
+  gap: 0;
+}
+.arch .col {
+  border: 1px solid var(--gray-300);
+  padding: 14px 14px 16px;
+  background: var(--white);
+}
+.arch .col.brand {
+  background: var(--blue-brand);
+  border-color: var(--blue-brand);
+}
+.arch .col.brand .lab,
+.arch .col.brand .ttl,
+.arch .col.brand li { color: var(--white); }
+.arch .col.brand li::before { background: var(--blue-light); }
+.arch .col .lab {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue-brand);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.arch .col .ttl {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.02em;
+  color: var(--chumbo);
+  margin-bottom: 10px;
+}
+.arch .col ul { list-style: none; padding: 0; margin: 0; }
+.arch .col li {
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--gray-700);
+  padding-left: 11px;
+  position: relative;
+  margin-bottom: 4px;
+}
+.arch .col li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 6px;
+  width: 4px; height: 4px;
+  background: var(--blue-brand);
+  border-radius: 50%;
+}
+.arch .sep {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue-brand);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ============ BENEFICIO CHIP ============ */
+.bnf {
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  padding: 16px;
+}
+.bnf .lab {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  color: var(--blue-brand);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.bnf .ttl {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  color: var(--chumbo);
+  margin-bottom: 4px;
+  line-height: 1.1;
+}
+.bnf .dsc {
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--gray-700);
+}
+
+/* Highlight color variants */
+.bnf.green .lab { color: var(--green); }
+.bnf.green .ttl { color: var(--green); }
+.bnf.purple .lab { color: var(--purple); }
+.bnf.purple .ttl { color: var(--purple); }
+
+/* ============ FASES (4 fases verticais) ============ */
+.fase {
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  padding: 16px;
+  height: 100%;
+}
+.fase .head {
+  display: flex; align-items: baseline; gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--gray-300);
+}
+.fase .num {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: var(--blue-brand);
+  font-weight: 700;
+}
+.fase .ttl {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: -0.02em;
+  color: var(--chumbo);
+}
+.fase ul { list-style: none; padding: 0; margin: 0; }
+.fase li {
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--gray-700);
+  padding-left: 11px;
+  position: relative;
+  margin-bottom: 5px;
+}
+.fase li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 6px;
+  width: 4px; height: 4px;
+  background: var(--blue-brand);
+  border-radius: 50%;
+}
+
+/* ============ ROADMAP MODULE ============ */
+.mod {
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+.mod .head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-300);
+}
+.mod .head .num {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--blue-brand);
+  font-weight: 700;
+}
+.mod .head .badge {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  color: var(--gray-500);
+  text-transform: uppercase;
+}
+.mod .ttl {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -0.02em;
+  color: var(--chumbo);
+  margin-bottom: 8px;
+  line-height: 1.1;
+}
+.mod ul { list-style: none; padding: 0; margin: 0; }
+.mod li {
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--gray-700);
+  padding-left: 11px;
+  position: relative;
+  margin-bottom: 4px;
+}
+.mod li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 6px;
+  width: 4px; height: 4px;
+  background: var(--blue-brand);
+  border-radius: 50%;
+}

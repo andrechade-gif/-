@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Doutor-AI × TopMed — Gestão de Iniciativas 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --blue-deep: #003D6B;
+    --blue-brand: #0071BC;
+    --blue-mid: #3B8FE0;
+    --blue-light: #8FC0EA;
+    --blue-pale: #E8F1F8;
+    --white: #FFFFFF;
+    --paper: #FAFAFA;
+    --gray-100: #F1F2F4;
+    --gray-300: #D1D5DB;
+    --gray-500: #9CA3AF;
+    --gray-700: #4B5563;
+    --chumbo: #1A1F2E;
+    --green: #10B981;
+    --purple: #6366F1;
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  @page { size: A4 portrait; margin: 0; }
+  @page landscape { size: A4 landscape; margin: 0; }
+  @page cron-land { size: A4 landscape; margin: 0; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--white); }
+  body {
+    font-family: var(--font-sans);
+    color: var(--chumbo);
+    line-height: 1.5;
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ====================  PAGES  ==================== */
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 22mm 24mm 18mm;
+    page-break-after: always;
+    position: relative;
+    background: var(--white);
+    overflow: hidden;
+  }
+  .page.landscape {
+    width: 297mm;
+    height: 210mm;
+    page: landscape;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  /* ====================  HEADER / FOOTER  ==================== */
+  .ph {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--gray-300);
+    margin-bottom: 32px;
+  }
+  .ph .brand {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 700; font-size: 12px;
+    white-space: nowrap;
+  }
+  .ph .section {
+    font-family: var(--font-mono);
+    font-size: 9px; letter-spacing: .15em;
+    color: var(--gray-500); text-transform: uppercase;
+  }
+  .pf {
+    position: absolute; bottom: 10mm; left: 24mm; right: 24mm;
+    display: flex; justify-content: space-between;
+    padding-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 9px; letter-spacing: .12em; color: var(--gray-500);
+  }
+  .pf .pg b { color: var(--chumbo); font-weight: 700; }
+
+  /* ====================  LOGO  ==================== */
+  .logo {
+    display: inline-block;
+    width: 22px; height: 22px;
+    vertical-align: middle;
+  }
+  .logo-md { width: 30px; height: 30px; }
+
+  /* ====================  KICKER  ==================== */
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: .15em;
+    color: var(--blue-brand); text-transform: uppercase;
+    margin-bottom: 14px; font-weight: 500;
+  }
+  .kicker::before { content: '▸  '; }
+  .kicker.white { color: var(--blue-light); }
+
+  /* ====================  TYPOGRAPHY  ==================== */
+  .display {
+    font-weight: 800; font-size: 84px;
+    letter-spacing: -.05em; line-height: .92;
+    color: var(--chumbo);
+  }
+  .display-lg {
+    font-weight: 800; font-size: 110px;
+    letter-spacing: -.055em; line-height: .9;
+    color: var(--chumbo);
+  }
+  .hero {
+    font-weight: 800; font-size: 58px;
+    letter-spacing: -.045em; line-height: .94;
+    color: var(--chumbo);
+  }
+  h1 {
+    font-weight: 800; font-size: 42px;
+    letter-spacing: -.035em; line-height: 1;
+    color: var(--chumbo); margin-bottom: 8px;
+  }
+  h2 {
+    font-weight: 700; font-size: 22px;
+    letter-spacing: -.02em; line-height: 1.15;
+    color: var(--chumbo); margin-bottom: 8px;
+  }
+  h3 {
+    font-weight: 700; font-size: 15px;
+    letter-spacing: -.01em; line-height: 1.25;
+    color: var(--chumbo); margin-bottom: 6px;
+  }
+  h4 {
+    font-weight: 600; font-size: 12px;
+    line-height: 1.3; color: var(--chumbo); margin-bottom: 4px;
+  }
+  .italic-accent { font-style: italic; color: var(--blue-brand); font-weight: 800; }
+  .lead { font-size: 15px; color: var(--gray-700); line-height: 1.5; }
+  .body-text { font-size: 13px; color: var(--chumbo); line-height: 1.55; }
+  .body-text b { color: var(--chumbo); }
+  .text-muted { color: var(--gray-500); }
+  .text-deep { color: var(--blue-deep); }
+  .text-brand { color: var(--blue-brand); }
+  .mono-tag {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--gray-500); font-weight: 500;
+  }
+
+  /* ====================  COVER  ==================== */
+  .cover {
+    background: var(--blue-brand);
+    color: var(--white);
+    padding: 24mm;
+    height: 297mm;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .cover .top {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 14px;
+  }
+  .cover .display {
+    color: var(--white);
+    font-size: 92px;
+  }
+  .cover .italic-accent {
+    color: var(--blue-light); font-style: italic;
+  }
+  .cover .divider {
+    width: 96px; height: 2px;
+    background: var(--white); margin: 28px 0;
+    opacity: .9;
+  }
+  .cover .lead-white {
+    color: var(--blue-light); font-size: 15px;
+    line-height: 1.55; max-width: 62%;
+  }
+  .cover .lead-white b { color: var(--white); }
+  .cover-section {
+    margin-top: auto;
+  }
+  .cover .meta-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; padding-top: 24px; margin-top: 36px;
+    border-top: 1px solid rgba(255,255,255,.3);
+  }
+  .cover .meta-row .label {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--blue-light); margin-bottom: 6px;
+  }
+  .cover .meta-row .value {
+    font-weight: 700; font-size: 14px;
+  }
+  /* Mosaic decoration */
+  .cover-mosaic {
+    position: absolute; top: -40mm; right: -40mm;
+    width: 220mm; height: 220mm;
+    opacity: .12;
+    transform: rotate(-8deg);
+  }
+
+  /* ====================  SECTION COVER (dark)  ==================== */
+  .section-cover {
+    height: 297mm; padding: 24mm;
+    background: var(--chumbo); color: var(--white);
+    display: flex; flex-direction: column; justify-content: space-between;
+    position: relative; overflow: hidden;
+    page-break-after: always;
+  }
+  .section-cover .display { color: var(--white); }
+  .section-cover .italic-accent { color: var(--blue-light); }
+  .section-cover .lead-white {
+    color: var(--gray-500); font-size: 15px; max-width: 75%;
+  }
+  .section-cover .lead-white b { color: var(--white); }
+  .section-cover .roman {
+    font-family: var(--font-mono); font-weight: 600;
+    font-size: 13px; color: var(--blue-light);
+    letter-spacing: .2em; margin-bottom: 16px;
+  }
+  .section-cover .mono-tag { color: var(--blue-light); }
+  .section-cover .divider {
+    width: 96px; height: 2px;
+    background: var(--white); margin: 28px 0;
+    opacity: .9;
+  }
+  .section-cover .footer-line {
+    border-top: 1px solid rgba(255,255,255,.2);
+    padding-top: 16px;
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: .12em; color: var(--gray-500);
+  }
+
+  /* ====================  TOC  ==================== */
+  .toc-row {
+    display: grid; grid-template-columns: 72px 1fr auto;
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--gray-300);
+    gap: 20px;
+  }
+  .toc-row .num {
+    font-weight: 800; font-size: 26px; color: var(--blue-brand);
+    font-family: var(--font-mono); letter-spacing: -.02em;
+  }
+  .toc-row .title {
+    font-weight: 700; font-size: 18px; color: var(--chumbo);
+  }
+  .toc-row .sub {
+    font-size: 12px; color: var(--gray-700); margin-top: 4px;
+  }
+  .toc-row .pg {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: .12em; color: var(--gray-500);
+  }
+
+  /* ====================  CARDS / CALLOUT  ==================== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  .card {
+    border: 1px solid var(--gray-300);
+    background: var(--white);
+    padding: 18px; border-radius: 3px;
+  }
+  .card-accent { border-left: 3px solid var(--blue-brand); }
+  .card-soft { background: var(--blue-pale); border: none; }
+  .card-dark { background: var(--chumbo); color: var(--white); border: none; }
+  .card-dark h3, .card-dark h4 { color: var(--white); }
+  .card-dark .mono-tag { color: var(--blue-light); }
+
+  .callout {
+    background: var(--blue-pale);
+    border-left: 3px solid var(--blue-brand);
+    padding: 12px 16px;
+    margin: 12px 0;
+    border-radius: 0 3px 3px 0;
+  }
+  .callout .body-text { font-size: 12px; }
+  .callout.dark {
+    background: var(--chumbo); color: var(--white);
+    border-left-color: var(--blue-light);
+  }
+  .callout.dark .mono-tag { color: var(--blue-light); }
+  .callout.dark .body-text { color: var(--white); }
+
+  /* ====================  PILLS  ==================== */
+  .pill {
+    display: inline-block; padding: 4px 11px;
+    border-radius: 999px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: .12em; text-transform: uppercase;
+    font-weight: 600;
+  }
+  .pill-brand { background: var(--blue-brand); color: var(--white); }
+  .pill-deep { background: var(--blue-deep); color: var(--white); }
+  .pill-pale { background: var(--blue-pale); color: var(--blue-brand); }
+  .pill-chumbo { background: var(--chumbo); color: var(--white); }
+  .pill-green { background: var(--green); color: var(--white); }
+  .pill-orange { background: #FF8C42; color: var(--white); }
+
+  /* ====================  STATS  ==================== */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 24px; padding-top: 22px;
+    border-top: 1px solid var(--gray-300);
+  }
+  .stat .number {
+    font-weight: 800; font-size: 50px;
+    letter-spacing: -.04em; line-height: 1;
+    color: var(--blue-brand);
+  }
+  .stat .label {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gray-500); margin-top: 8px;
+  }
+
+  /* ====================  STEP FLOW  ==================== */
+  .step-flow {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 10px; margin: 18px 0;
+  }
+  .step { text-align: center; padding: 8px 6px; }
+  .step-num {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--blue-brand); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 18px; margin: 0 auto 10px;
+  }
+  .step-label {
+    font-size: 11px; font-weight: 600;
+    color: var(--chumbo); line-height: 1.25;
+  }
+  .step-sub {
+    font-size: 9px; color: var(--gray-500);
+    font-family: var(--font-mono); text-transform: uppercase;
+    letter-spacing: .1em; margin-top: 6px;
+  }
+
+  /* ====================  FRENTE CARDS  ==================== */
+  .frente-card {
+    border: 1px solid var(--gray-300);
+    border-top: 4px solid var(--blue-brand);
+    padding: 16px; border-radius: 3px;
+    background: var(--white);
+  }
+  .frente-card .num {
+    font-weight: 800; font-size: 56px;
+    color: var(--blue-brand); line-height: 1;
+    letter-spacing: -.04em; margin-bottom: 6px;
+  }
+  .frente-card .body-text { font-size: 11.5px; line-height: 1.45; }
+  .frente-card.f1 { border-top-color: #FF8C42; }
+  .frente-card.f1 .num { color: #FF8C42; }
+  .frente-card.f2 { border-top-color: var(--blue-brand); }
+  .frente-card.f2 .num { color: var(--blue-brand); }
+  .frente-card.f3 { border-top-color: var(--green); }
+  .frente-card.f3 .num { color: var(--green); }
+
+  /* ====================  TABLE  ==================== */
+  table.data {
+    width: 100%; border-collapse: collapse;
+    margin: 12px 0; font-size: 12px;
+  }
+  table.data th {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gray-500); font-weight: 500;
+    text-align: left; padding: 9px 11px;
+    border-bottom: 1px solid var(--gray-300);
+  }
+  table.data td {
+    padding: 8px 11px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+  }
+  table.data tr:last-child td { border-bottom: none; }
+  table.data .num {
+    text-align: right; font-variant-numeric: tabular-nums;
+    font-family: var(--font-mono);
+  }
+  table.data .right { text-align: right; }
+  table.data .center { text-align: center; }
+  table.data tr.total td {
+    background: var(--chumbo); color: var(--white);
+    font-weight: 700; font-size: 13px; padding: 12px 11px;
+  }
+  table.data tr.total .num { color: var(--white); }
+
+  /* ====================  ALGORITHMS / DESFECHOS  ==================== */
+  .alg-card {
+    display: grid; grid-template-columns: 40px 1fr;
+    gap: 14px; padding: 12px 14px;
+    border: 1px solid var(--gray-300); border-radius: 3px;
+    margin-bottom: 8px; align-items: center;
+  }
+  .alg-card .n {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--blue-brand); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px;
+  }
+  .alg-card h4 { font-size: 13px; margin-bottom: 2px; }
+  .alg-card p { font-size: 11px; color: var(--gray-700); }
+
+  .scope-block {
+    border: 1px solid var(--gray-300); border-left: 3px solid var(--blue-brand);
+    padding: 12px 14px; border-radius: 0 3px 3px 0;
+    margin-bottom: 8px; background: var(--white);
+  }
+  .scope-block.green { border-left-color: var(--green); }
+  .scope-block.deep { border-left-color: var(--blue-deep); }
+  .scope-block.mid { border-left-color: var(--blue-mid); }
+  .scope-block.warn { border-left-color: #E64C3C; }
+  .scope-block h4 { font-size: 13px; margin-bottom: 2px; }
+  .scope-block p { font-size: 11px; color: var(--gray-700); line-height: 1.4; }
+
+  /* ====================  STATUS ROWS  ==================== */
+  .status-row {
+    display: grid; grid-template-columns: 38px 1fr 110px 110px;
+    gap: 14px; align-items: center;
+    padding: 12px 16px;
+    border: 1px solid var(--gray-300);
+    border-left: 3px solid var(--blue-brand);
+    border-radius: 0 3px 3px 0;
+    margin-bottom: 7px;
+  }
+  .status-row.orange { border-left-color: #FF8C42; }
+  .status-row.green-edge { border-left-color: var(--green); }
+  .status-row .step-num-mini {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--blue-brand); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 11px; font-family: var(--font-mono);
+  }
+  .status-row.orange .step-num-mini { background: #FF8C42; }
+  .status-row.green-edge .step-num-mini { background: var(--green); }
+  .status-row .body p { font-size: 11px; color: var(--gray-700); line-height: 1.4; }
+  .status-row .body .actv { font-size: 12px; font-weight: 600; color: var(--chumbo); margin-bottom: 2px; }
+  .status-row .resp {
+    text-align: center; font-size: 10px; font-weight: 700;
+    background: var(--blue-pale); color: var(--blue-brand);
+    padding: 5px 6px; border-radius: 3px;
+  }
+  .status-row .stat-tag {
+    text-align: center; font-family: var(--font-mono);
+    font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+    font-weight: 700; padding: 6px 8px; border-radius: 3px;
+    background: var(--gray-100); color: var(--gray-700);
+  }
+  .status-row .stat-green { background: var(--green); color: var(--white); }
+  .status-row .stat-pending { background: #FFB84D; color: var(--white); }
+
+  /* ====================  CHANNEL / TIPO CARDS  ==================== */
+  .channel-card {
+    border: 1px solid var(--gray-300); padding: 12px 14px;
+    border-radius: 3px; border-top: 3px solid var(--blue-brand);
+  }
+  .channel-card h4 { font-size: 12px; margin-bottom: 4px; color: var(--blue-brand); }
+  .channel-card p { font-size: 10px; color: var(--gray-700); }
+
+  .tipo-card {
+    text-align: center; padding: 13px 8px;
+    border: 1px solid var(--gray-300); border-radius: 3px;
+    border-top: 3px solid var(--blue-brand);
+  }
+  .tipo-card .n {
+    font-weight: 800; font-size: 22px;
+    color: var(--blue-brand); margin-bottom: 4px;
+  }
+  .tipo-card .lbl { font-size: 10px; font-weight: 600; line-height: 1.2; }
+  .tipo-card.c1 { border-top-color: var(--blue-deep); } .tipo-card.c1 .n { color: var(--blue-deep); }
+  .tipo-card.c2 { border-top-color: var(--blue-brand); } .tipo-card.c2 .n { color: var(--blue-brand); }
+  .tipo-card.c3 { border-top-color: #00A8C9; } .tipo-card.c3 .n { color: #00A8C9; }
+  .tipo-card.c4 { border-top-color: var(--green); } .tipo-card.c4 .n { color: var(--green); }
+  .tipo-card.c5 { border-top-color: #FF8C42; } .tipo-card.c5 .n { color: #FF8C42; }
+  .tipo-card.c6 { border-top-color: var(--purple); } .tipo-card.c6 .n { color: var(--purple); }
+
+  /* ====================  CRONOGRAMA IMAGES  ==================== */
+  .cron-img-wrap {
+    border: 1px solid var(--gray-300);
+    background: var(--white);
+    padding: 14px;
+    border-radius: 3px;
+    margin-top: 16px;
+  }
+  .cron-img-wrap img {
+    width: 100%; height: auto; display: block;
+  }
+  .cron-img-wrap .caption {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gray-500); margin-top: 10px;
+    text-align: right;
+  }
+
+  /* ====================  LISTS  ==================== */
+  ul.clean { list-style: none; padding: 0; }
+  ul.clean li {
+    padding: 5px 0 5px 18px; position: relative;
+    font-size: 12px; line-height: 1.45;
+  }
+  ul.clean li::before {
+    content: ''; position: absolute; left: 0; top: 11px;
+    width: 5px; height: 5px; background: var(--blue-brand);
+  }
+
+  /* ====================  UTIL  ==================== */
+  .mb-8 { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .flex { display: flex; }
+  .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  .gap-8 { gap: 8px; }
+  .nowrap { white-space: nowrap; }
+
+  /* ====================  BUDGET / TOTAL BOX  ==================== */
+  .budget-summary {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin: 16px 0;
+  }
+  .budget-summary .box {
+    padding: 20px; border-radius: 3px;
+  }
+  .budget-summary .box.past {
+    background: var(--blue-pale); border-left: 4px solid var(--blue-brand);
+  }
+  .budget-summary .box.future {
+    background: var(--chumbo); color: var(--white);
+    border-left: 4px solid var(--blue-light);
+  }
+  .budget-summary .box.future .mono-tag { color: var(--blue-light); }
+  .budget-summary .box .v {
+    font-weight: 800; font-size: 28px;
+    letter-spacing: -.03em; margin-top: 8px;
+  }
+  .budget-summary .box.past .v { color: var(--blue-deep); }
+  .budget-summary .box.future .v { color: var(--white); }
+  .budget-summary .box .h {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--gray-500); margin-top: 6px;
+    letter-spacing: .1em;
+  }
+  .budget-summary .box.future .h { color: var(--blue-light); }
+
+  /* ====================  KEY BLOCK  ==================== */
+  .key-block {
+    text-align: left; padding: 12px 14px;
+    border: 1px solid var(--gray-300);
+    border-left: 3px solid var(--blue-brand);
+  }
+  .key-block .key-num {
+    font-weight: 800; font-size: 30px; line-height: 1;
+    color: var(--blue-brand); letter-spacing: -.04em;
+  }
+  .key-block .key-label {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gray-500); margin-top: 5px;
+  }
+  .key-block .key-sub { font-size: 10px; color: var(--gray-700); margin-top: 4px; }
+
+  /* ====================  LINK CARD  ==================== */
+  .link-card {
+    background: var(--chumbo); color: var(--white);
+    padding: 22px 24px; border-radius: 3px;
+    margin-top: 20px;
+  }
+  .link-card .mono-tag { color: var(--blue-light); margin-bottom: 8px; }
+  .link-card h3 { color: var(--white); margin-bottom: 4px; font-size: 17px; }
+  .link-card p { font-size: 12px; color: var(--gray-500); margin-bottom: 14px; }
+  .link-card .url-box {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    padding: 12px 14px; border-radius: 3px;
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--blue-light); word-break: break-all;
+  }
+  .link-card .url-box a { color: var(--blue-light); text-decoration: none; }
+
+  /* ====================  CLOSING  ==================== */
+
+  .cron-land {
+    page: cron-land;
+    page-break-after: always;
+    padding: 10mm 14mm;
+    position: relative;
+    width: 297mm;
+    height: 210mm;
+    overflow: hidden;
+    background: var(--white);
+    box-sizing: border-box;
+  }
+  .cron-land h2.ttl {
+    font-weight: 800; font-size: 22px; letter-spacing: -.02em;
+    margin-bottom: 4px;
+  }
+  .cron-land h2.ttl .italic-accent { font-style: italic; color: var(--blue-brand); font-weight: 800; }
+  .cron-land .cron-meta {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gray-500);
+  }
+  .cron-land .cron-meta b { color: var(--blue-brand); font-size: 12px; }
+  .cron-land .cron-img-display {
+    width: 269mm;
+    max-width: 269mm;
+    height: auto;
+    max-height: 160mm;
+    display: block;
+    margin: 6mm auto 0;
+    object-fit: contain;
+  }
+
+  .closing {
+    background: var(--blue-deep); color: var(--white);
+    height: 297mm; padding: 24mm;
+    display: flex; flex-direction: column; justify-content: center;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .closing .hero-closing {
+    font-weight: 800; font-size: 56px;
+    line-height: 1.05; letter-spacing: -.04em;
+  }
+  .closing .accent { color: var(--blue-light); font-style: italic; }
+  .closing .divider {
+    width: 96px; height: 2px; background: var(--blue-light);
+    margin: 28px auto; opacity: .85;
+  }
+  .closing .signature {
+    font-family: var(--font-mono); font-size: 14px;
+    letter-spacing: .1em; color: var(--blue-light);
+  }
+  .closing .signature b { color: var(--white); }
+  .closing-footer {
+    position: absolute; bottom: 22mm; left: 0; right: 0;
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--blue-light); letter-spacing: .12em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     COVER · INSPIRED BY BRANDING BOOK
+     ============================================================ -->
+<div class="cover">
+  <div class="top">
+    <svg class="logo logo-md" viewBox="0 0 80 60" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+      <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+      <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+      <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+    </svg>
+    <span style="font-size: 16px;">Doutor-AI</span>
+  </div>
+
+  <div style="margin-top: auto;">
+    <div class="mono-tag" style="color: rgba(255,255,255,.7); margin-bottom: 22px;">▸  GESTÃO DE INICIATIVAS · 2026</div>
+    <h1 class="display" style="font-size: 96px;">Doutor-AI<br><span class="italic-accent">×</span> TopMed.</h1>
+    <div class="divider"></div>
+    <p class="lead-white" style="max-width: 60%;">Alinhamento de iniciativas, prioridades e arquitetura de implementação — proposta consolidada de <b>governança &amp; roadmap</b> entre as equipes.</p>
+  </div>
+
+  <div class="meta-row">
+    <div>
+      <div class="label">Versão</div>
+      <div class="value">v1.0</div>
+    </div>
+    <div>
+      <div class="label">Publicação</div>
+      <div class="value">Maio · 2026</div>
+    </div>
+    <div>
+      <div class="label">Localidade</div>
+      <div class="value">São Paulo · Brasil</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SUMÁRIO
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">SUMÁRIO</div>
+  </div>
+
+  <div class="kicker">SUMÁRIO</div>
+  <h1 class="hero">O que tem aqui <span class="italic-accent">dentro.</span></h1>
+
+  <div style="margin-top: 40px;">
+    <div class="toc-row">
+      <div class="num">I</div>
+      <div>
+        <div class="title">Contexto &amp; Governança</div>
+        <div class="sub">Desafio central · Framework de governança</div>
+      </div>
+      <div class="pg">03 — 04</div>
+    </div>
+    <div class="toc-row">
+      <div class="num">II</div>
+      <div>
+        <div class="title">Portfólio de Iniciativas 2026</div>
+        <div class="sub">Visão integrada das três frentes ativas</div>
+      </div>
+      <div class="pg">05</div>
+    </div>
+    <div class="toc-row">
+      <div class="num">III</div>
+      <div>
+        <div class="title">Iniciativa 01 · POC Auditoria Clínica PACK</div>
+        <div class="sub">Como funciona · Timeline &amp; Entregáveis · Próximos passos</div>
+      </div>
+      <div class="pg">06 — 08</div>
+    </div>
+    <div class="toc-row">
+      <div class="num">IV</div>
+      <div>
+        <div class="title">Iniciativa 02 · POC Triagem Clínica por Voz</div>
+        <div class="sub">Jornada · Algoritmos &amp; Desfechos · Próximos passos</div>
+      </div>
+      <div class="pg">09 — 11</div>
+    </div>
+    <div class="toc-row">
+      <div class="num">V</div>
+      <div>
+        <div class="title">Iniciativa 03 · Copilotos de IA para Telemedicina</div>
+        <div class="sub">Contexto · Solução &amp; Entregas · Inputs/Outputs · Próximos passos</div>
+      </div>
+      <div class="pg">12 — 15</div>
+    </div>
+    <div class="toc-row">
+      <div class="num">VI</div>
+      <div>
+        <div class="title">Cronograma Consolidado</div>
+        <div class="sub">Visão integrada das três frentes — Março a Maio/26+</div>
+      </div>
+      <div class="pg">16</div>
+    </div>
+    <div class="toc-row">
+      <div class="num">VII</div>
+      <div>
+        <div class="title">Cronogramas</div>
+        <div class="sub">Cronogramas executivos por frente</div>
+      </div>
+      <div class="pg">17 — 19</div>
+    </div>
+    <div class="toc-row">
+      <div class="num">VIII</div>
+      <div>
+        <div class="title">Consolidado de Horas Trabalhadas</div>
+        <div class="sub">Resumo das atividades executadas + acesso à planilha completa</div>
+      </div>
+      <div class="pg">20</div>
+    </div>
+    <div class="toc-row">
+      <div class="num">IX</div>
+      <div>
+        <div class="title">Orçamento</div>
+        <div class="sub">Estimativa de implantação por frente · R$ 250/hora</div>
+      </div>
+      <div class="pg">21</div>
+    </div>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>02</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     I · DESAFIO CENTRAL
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">I · CONTEXTO &amp; GOVERNANÇA</div>
+  </div>
+
+  <div class="kicker">I · DESAFIO CENTRAL</div>
+  <h1>O Desafio Central · <span class="italic-accent">por que este alinhamento é indispensável.</span></h1>
+  <p class="lead" style="margin-top: 10px;">Quatro tensões inerentes à integração entre Doutor-AI e TopMed.</p>
+
+  <div class="grid-2" style="margin-top: 28px;">
+    <div class="card card-accent">
+      <div class="mono-tag mb-8">01 · MÚLTIPLAS EXPECTATIVAS</div>
+      <h3>Diversas áreas, visões distintas</h3>
+      <p class="body-text">Diversas áreas e personas têm visões distintas sobre o papel da IA — sem alinhamento estruturado, cada equipe opera com premissas diferentes.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid #FF8C42;">
+      <div class="mono-tag mb-8" style="color: #FF8C42;">02 · POC vs. PRODUÇÃO</div>
+      <h3>Tratamentos fundamentalmente distintos</h3>
+      <p class="body-text">Iniciativas experimentais e soluções de produção exigem tratamentos diferentes: escopo, riscos, timelines e arquiteturas. POCs validam funcionalidades; as definições para produção devem ser aprofundadas e validadas por TI/TOPMED × PRODUTOS/Doutor-AI com alinhamento aos usuários de negócio.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--green);">
+      <div class="mono-tag mb-8" style="color: var(--green);">03 · PLATAFORMA TOPMED COMO CENTRO</div>
+      <h3>Nenhum fluxo paralelo</h3>
+      <p class="body-text">Nenhuma solução de IA deve criar fluxos paralelos. Tudo precisa ser orquestrado dentro da plataforma oficial TopMed — <b>sem shadow systems</b>.</p>
+    </div>
+    <div class="card card-accent">
+      <div class="mono-tag mb-8">04 · TRÊS ÁREAS, UMA DECISÃO</div>
+      <h3>Convergência de prioridades</h3>
+      <p class="body-text">Negócio, TI/TopMed e Produto/Doutor-AI precisam convergir em prioridades, arquitetura e entregáveis — especialmente nos projetos de produção.</p>
+    </div>
+  </div>
+
+  <div class="callout mt-24">
+    <div class="mono-tag" style="color: var(--blue-brand); margin-bottom: 6px;">PRINCÍPIO</div>
+    <p class="body-text"><b>Governança clara entre Negócio, TI/TopMed e Produto/Doutor-AI</b> é o alicerce de toda entrega bem-sucedida.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>03</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     I · FRAMEWORK DE GOVERNANÇA
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">I · CONTEXTO &amp; GOVERNANÇA</div>
+  </div>
+
+  <div class="kicker">I · FRAMEWORK</div>
+  <h1>Framework de <span class="italic-accent">Governança.</span></h1>
+  <p class="lead" style="margin-top: 10px;">Toda demanda passa por este processo antes de entrar em execução.</p>
+
+  <div class="step-flow mt-24">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-label">Identificação<br>da Demanda</div>
+      <div class="step-sub">Área de Negócio</div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background: var(--blue-mid);">2</div>
+      <div class="step-label">Classificação<br>POC ou Produção</div>
+      <div class="step-sub">Negócio + Produto</div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background: #00A8C9;">3</div>
+      <div class="step-label">Alinhamento<br>Arquitetural</div>
+      <div class="step-sub">TI/TopMed + Doutor-AI</div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background: var(--blue-deep);">4</div>
+      <div class="step-label">Aprovação<br>&amp; Priorização</div>
+      <div class="step-sub">Executivos TopMed</div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background: var(--green);">5</div>
+      <div class="step-label">Execução<br>&amp; Entrega</div>
+      <div class="step-sub">Squads Integrados</div>
+    </div>
+  </div>
+
+  <h2 class="mt-24">Classificação da demanda</h2>
+
+  <div class="grid-2 mt-16">
+    <div class="card" style="border-left: 3px solid #FF8C42;">
+      <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+        <span class="pill pill-orange">EXPERIMENTAL · POC</span>
+      </div>
+      <ul class="clean">
+        <li>Validação técnica/clínica</li>
+        <li>Escopo limitado</li>
+        <li>Sem integração de produção</li>
+        <li>Entrega de planilha/relatório</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--green);">
+      <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+        <span class="pill pill-green">PRODUÇÃO</span>
+      </div>
+      <ul class="clean">
+        <li>Integração na Plataforma TopMed</li>
+        <li>Kick-off formal</li>
+        <li>Prototipação aprovada</li>
+        <li>Interfaces definidas com TI</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout mt-24">
+    <div class="mono-tag" style="color: var(--blue-brand); margin-bottom: 6px;">REGRA DE OURO</div>
+    <p class="body-text">Todas as iniciativas de produção são integradas <b>exclusivamente na Plataforma TopMed</b> — sem fluxos paralelos.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>04</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     II · PORTFÓLIO DE INICIATIVAS 2026
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">II · PORTFÓLIO 2026</div>
+  </div>
+
+  <div class="kicker">II · PORTFÓLIO</div>
+  <h1>Portfólio de Iniciativas <span class="italic-accent">2026.</span></h1>
+  <p class="lead" style="margin-top: 10px;">Três demandas ativas — duas experimentais e um projeto de produção.</p>
+
+  <div class="grid-3 mt-24">
+    <div class="frente-card f1">
+      <div style="margin-bottom: 8px;">
+        <span class="pill pill-orange">EXPERIMENTAL</span>
+      </div>
+      <div class="num">01</div>
+      <h3>POC · Auditoria de Atendimentos Clínicos</h3>
+      <div class="mono-tag" style="color: #FF8C42; margin: 6px 0 10px;">PROTOCOLO PACK</div>
+      <p class="body-text">Agentes de IA transcrevem e preenchem automaticamente fichas de auditoria baseadas no protocolo clínico <b>PACK</b>, validando assertividade antes da integração sistêmica.</p>
+      <div style="margin-top: 14px;"><span class="pill pill-brand">EM EXECUÇÃO</span></div>
+    </div>
+    <div class="frente-card f2">
+      <div style="margin-bottom: 8px;">
+        <span class="pill pill-orange">EXPERIMENTAL</span>
+      </div>
+      <div class="num">02</div>
+      <h3>POC · Triagem Clínica por Voz</h3>
+      <div class="mono-tag" style="color: var(--blue-brand); margin: 6px 0 10px;">CANAL TELEFÔNICO</div>
+      <p class="body-text">Agente de IA atende ligações, valida elegibilidade via API TopMed e conduz triagem clínica por voz com <b>4 algoritmos</b>. Dashboard de resultados em tempo real.</p>
+      <div style="margin-top: 14px;"><span class="pill pill-brand">EM ALINHAMENTO</span></div>
+    </div>
+    <div class="frente-card f3">
+      <div style="margin-bottom: 8px;">
+        <span class="pill pill-green">PRODUÇÃO</span>
+      </div>
+      <div class="num">03</div>
+      <h3>Copilotos de IA para Telemedicina</h3>
+      <div class="mono-tag" style="color: var(--green); margin: 6px 0 10px;">PLATAFORMA TOPMED</div>
+      <p class="body-text">Kick-off formal com Área de Produtos TopMed. Definição de fluxos, interfaces, metadados e prototipação para <b>integração nativa</b> na plataforma oficial.</p>
+      <div style="margin-top: 14px;"><span class="pill pill-green">KICK-OFF</span></div>
+    </div>
+  </div>
+
+  <div class="callout mt-24">
+    <div class="mono-tag" style="color: var(--blue-brand); margin-bottom: 6px;">PRINCÍPIO</div>
+    <p class="body-text">Todas as iniciativas de produção são integradas exclusivamente na Plataforma TopMed — <b>sem fluxos paralelos</b>.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>05</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     III · SECTION COVER — INICIATIVA 01
+     ============================================================ -->
+<div class="section-cover">
+  <div>
+    <div class="roman">III</div>
+    <div class="mono-tag">▸  INICIATIVA 01 · POC EXPERIMENTAL</div>
+  </div>
+  <div>
+    <h1 class="display">Auditoria<br>Clínica<br><span class="italic-accent">PACK.</span></h1>
+    <div class="divider"></div>
+    <p class="lead-white">Agentes de IA automatizam <b>100% das auditorias</b> de atendimentos · Protocolo PACK · Validação clínica humana.</p>
+  </div>
+  <div class="footer-line">
+    <div>POC · MARÇO 2026</div>
+    <div>INICIATIVA 01 / 03</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     III · INICIATIVA 01 — COMO FUNCIONA
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">III · INICIATIVA 01 · AUDITORIA PACK</div>
+  </div>
+
+  <div class="kicker">III · INICIATIVA 01 · COMO FUNCIONA</div>
+  <h1>POC · <span class="italic-accent">Auditoria Clínica PACK.</span></h1>
+  <p class="lead" style="margin-top: 8px;">Agentes de IA automatizam 100% das auditorias de atendimentos · Protocolo PACK.</p>
+
+  <div class="callout">
+    <p class="body-text"><b>Solução.</b> Agentes de IA recebem gravações de atendimentos clínicos, transcrevem com STT, interpretam o conteúdo e preenchem automaticamente a ficha de auditoria segundo os critérios e guidelines do <b>Protocolo PACK</b> — entregando os resultados tabulados para revisão e validação clínica humana.</p>
+  </div>
+
+  <h2 class="mt-24">Como funciona</h2>
+  <div class="step-flow">
+    <div class="step">
+      <div class="step-num" style="background: #FF8C42;">1</div>
+      <div class="step-label">Recebe<br>gravação</div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background: #FF8C42;">2</div>
+      <div class="step-label">Transcreve<br>(STT/IA)</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-label">Analisa<br>conteúdo</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-label">Preenche<br>ficha PACK</div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background: var(--green);">5</div>
+      <div class="step-label">Tabula<br>resultados</div>
+    </div>
+  </div>
+
+  <div class="grid-3 mt-24">
+    <div class="card card-accent">
+      <div class="mono-tag mb-8">INPUTS</div>
+      <ul class="clean">
+        <li>Gravações de atendimentos (áudio)</li>
+        <li>Prontuários (PEP) — Médico &amp; Enfermagem</li>
+        <li>Ficha modelo de auditoria PACK</li>
+        <li>Guidelines clínicos do protocolo</li>
+        <li>REMUNE Blumenau &amp; Florianópolis (13/03)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--green);">
+      <div class="mono-tag mb-8" style="color: var(--green);">OUTPUTS</div>
+      <ul class="clean">
+        <li>Ficha de auditoria preenchida automaticamente</li>
+        <li>Planilha tabulada com 100% dos atendimentos</li>
+        <li>Sinalização de desvios e não-conformidades</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left: 3px solid #FF8C42;">
+      <div class="mono-tag mb-8" style="color: #FF8C42;">RESULTADOS ESPERADOS</div>
+      <ul class="clean">
+        <li>Cobertura 100% vs. amostragem atual</li>
+        <li>Eliminação do processo 100% manual</li>
+        <li>Profissional foca em validação técnica</li>
+        <li>Base para futura integração sistêmica</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout mt-16">
+    <p class="body-text">Após validação clínica, o próximo passo é alinhar com TI/TopMed como incorporar o fluxo de automação na plataforma oficial.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>06</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     III · INICIATIVA 01 — TIMELINE & ENTREGÁVEIS
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">III · INICIATIVA 01 · TIMELINE</div>
+  </div>
+
+  <div class="kicker">III · INICIATIVA 01 · TIMELINE &amp; ENTREGÁVEIS</div>
+  <h1>Timeline &amp; <span class="italic-accent">entregáveis.</span></h1>
+  <p class="lead" style="margin-top: 8px;">POC Auditoria Clínica PACK · Março 2026.</p>
+
+  <div class="grid-4 mt-24">
+    <div class="card" style="border-top: 3px solid var(--green); padding: 14px;">
+      <div class="mono-tag mb-8" style="color: var(--green);">20/02 · ✓</div>
+      <h4>Chamadas disponibilizadas</h4>
+      <p class="body-text" style="font-size: 11px; margin-top: 6px;">Gravações de atendimentos clínicos entregues à equipe Doutor-AI para início do processamento.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--green); padding: 14px;">
+      <div class="mono-tag mb-8" style="color: var(--green);">11/03 · ✓</div>
+      <h4>Planilha de auditoria manual</h4>
+      <p class="body-text" style="font-size: 11px; margin-top: 6px;">Recebimento da planilha com exemplos de auditorias manuais — base de guideline para os agentes. Novas fichas técnicas e REMUNE adicionadas nas regras (13/03).</p>
+    </div>
+    <div class="card" style="border-top: 3px solid #FF8C42; padding: 14px;">
+      <div class="mono-tag mb-8" style="color: #FF8C42;">12–13/03</div>
+      <h4>Processamento IA + Tabulação</h4>
+      <p class="body-text" style="font-size: 11px; margin-top: 6px;">Execução dos agentes de IA sobre os atendimentos: transcrição, análise, preenchimento das fichas PACK e tabulação completa.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid #FF8C42; padding: 14px;">
+      <div class="mono-tag mb-8" style="color: #FF8C42;">24/03</div>
+      <h4>Validação pelo Negócio</h4>
+      <p class="body-text" style="font-size: 11px; margin-top: 6px;">Resultados entregues para usuários de negócio TopMed avaliarem assertividade clínica. Decisões: incluir prontuários e auditoria de Enfermagem.</p>
+    </div>
+  </div>
+
+  <h2 class="mt-24">Pós-validação · próximos passos</h2>
+
+  <div class="grid-2 mt-16">
+    <div class="card card-accent">
+      <div class="mono-tag mb-8">ALINHAMENTO TI/TOPMED</div>
+      <p class="body-text">Definição de como a plataforma TopMed incorporará o fluxo de automação de auditorias — interfaces de integração entre sistemas. Aguardando recebimento dos prontuários de consultas e gravações de enfermagem (25/03).</p>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--green);">
+      <div class="mono-tag mb-8" style="color: var(--green);">ESCALA PARA 100% DOS ATENDIMENTOS</div>
+      <p class="body-text">Após aprovação clínica da POC, evolução para automação contínua em produção — cobrindo todos os atendimentos da operação.</p>
+    </div>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>07</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     III · INICIATIVA 01 — PRÓXIMOS PASSOS
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">III · INICIATIVA 01 · PRÓXIMOS PASSOS</div>
+  </div>
+
+  <div class="kicker">III · INICIATIVA 01 · PRÓXIMOS PASSOS</div>
+  <h1>Próximos passos · <span class="italic-accent">POC Auditoria.</span></h1>
+  <p class="lead" style="margin-top: 10px;">Ações imediatas para desbloqueio e avanço da iniciativa.</p>
+
+  <div class="mt-24">
+    <div class="status-row orange">
+      <div class="step-num-mini">01</div>
+      <div class="body">
+        <div class="actv">Primeira rodada de processamento concluída</div>
+        <p>Decisão de ampliar a auditoria com mais gravações e PEP. Receber prontuários de consultas e enfermagem. Novas fichas de Enfermagem para novo processamento.</p>
+      </div>
+      <div class="resp">Doutor-AI</div>
+      <div class="stat-tag stat-green">ENTREGUE</div>
+    </div>
+
+    <div class="status-row orange">
+      <div class="step-num-mini">02</div>
+      <div class="body">
+        <div class="actv">Resultados disponibilizados para validação</div>
+        <p>Resultados disponibilizados para validação clínica pelos usuários de negócio TopMed.</p>
+      </div>
+      <div class="resp">Doutor-AI</div>
+      <div class="stat-tag stat-green">ENTREGUE</div>
+    </div>
+
+    <div class="status-row orange">
+      <div class="step-num-mini">03</div>
+      <div class="body">
+        <div class="actv">Processamento do feedback e treinamento de regras</div>
+        <p>Estamos processando o feedback, treinando as regras e prevemos liberar para nova rodada de testes na segunda-feira.</p>
+      </div>
+      <div class="resp">Doutor-AI</div>
+      <div class="stat-tag stat-pending">PREV. 14/05</div>
+    </div>
+
+    <div class="status-row orange">
+      <div class="step-num-mini">04</div>
+      <div class="body">
+        <div class="actv">Novos áudios para processamento</div>
+        <p>Cris passou para o Thiago novos áudios para processamento na semana do dia 27/04. Processamento em execução, com entrega prevista até sexta-feira.</p>
+      </div>
+      <div class="resp">Doutor-AI</div>
+      <div class="stat-tag stat-pending">PREV. 14/05</div>
+    </div>
+
+    <div class="status-row orange">
+      <div class="step-num-mini">05</div>
+      <div class="body">
+        <div class="actv">Cronograma do ambiente de produção</div>
+        <p>Mapeamos as atividades necessárias para criação do ambiente de produção da auditoria — cronograma elaborado e disponível na Seção VII.</p>
+      </div>
+      <div class="resp">Doutor-AI</div>
+      <div class="stat-tag stat-pending">PREV. 14/05</div>
+    </div>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>08</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     IV · SECTION COVER — INICIATIVA 02
+     ============================================================ -->
+<div class="section-cover">
+  <div>
+    <div class="roman">IV</div>
+    <div class="mono-tag">▸  INICIATIVA 02 · POC EXPERIMENTAL</div>
+  </div>
+  <div>
+    <h1 class="display">Triagem<br>Clínica<br>por <span class="italic-accent">Voz.</span></h1>
+    <div class="divider"></div>
+    <p class="lead-white">Agente de IA receptivo · Canal Telefônico · <b>4 algoritmos clínicos</b> · Elegibilidade via API TopMed.</p>
+  </div>
+  <div class="footer-line">
+    <div>POC · 15 DIAS APÓS ENTREGA DE MATERIAIS</div>
+    <div>INICIATIVA 02 / 03</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     IV · INICIATIVA 02 — JORNADA
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">IV · INICIATIVA 02 · TRIAGEM</div>
+  </div>
+
+  <div class="kicker">IV · INICIATIVA 02 · JORNADA</div>
+  <h1>POC · <span class="italic-accent">Triagem Clínica por Voz.</span></h1>
+  <p class="lead" style="margin-top: 8px;">Agente de IA receptivo · 4 algoritmos clínicos · Elegibilidade via API TopMed em tempo real.</p>
+
+  <div class="callout">
+    <p class="body-text"><b>Solução.</b> O agente de IA atende ligações inbound (0800), coleta CPF por voz, valida elegibilidade via API TopMed em tempo real, conduz triagem estruturada por voz usando <b>4 algoritmos clínicos validados</b>, classifica o risco e orienta o paciente ao desfecho correto. Toda jornada é registrada em planilha e um dashboard monitora os resultados da POC.</p>
+  </div>
+
+  <h2 class="mt-24">Jornada do paciente</h2>
+  <div class="step-flow">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-label">Liga para<br>o 0800</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-label">IA coleta CPF<br>valida API</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-label">Triagem<br>4 algoritmos</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-label">Classifica<br>risco/desfecho</div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background: var(--green);">5</div>
+      <div class="step-label">Orienta e<br>registra jornada</div>
+    </div>
+  </div>
+
+  <div class="grid-3 mt-24">
+    <div class="card card-accent">
+      <div class="mono-tag mb-8">INPUTS</div>
+      <ul class="clean">
+        <li>Ligação inbound do paciente (voz)</li>
+        <li>CPF para validação de elegibilidade</li>
+        <li>API de elegibilidade TopMed</li>
+        <li>4 algoritmos clínicos (Excel validado)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--green);">
+      <div class="mono-tag mb-8" style="color: var(--green);">OUTPUTS</div>
+      <ul class="clean">
+        <li>Triagem estruturada concluída por voz</li>
+        <li>Desfecho clínico e orientação ao paciente</li>
+        <li>Log completo da jornada em planilha</li>
+        <li>Dashboard de resultados em tempo real</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left: 3px solid #FF8C42;">
+      <div class="mono-tag mb-8" style="color: #FF8C42;">RESULTADOS ESPERADOS</div>
+      <ul class="clean">
+        <li>Cobertura 24/7 sem operador humano</li>
+        <li>Consistência clínica via algoritmos validados</li>
+        <li>Dados para decisão de escala para produção</li>
+        <li>Redução de filas e melhora da experiência</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout mt-16">
+    <p class="body-text">POC de 15 dias após entrega · 2 números dedicados (homologação interna + testes TopMed).</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>09</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     IV · INICIATIVA 02 — ESCOPO, ALGORITMOS & PENDÊNCIAS
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">IV · INICIATIVA 02 · ESCOPO</div>
+  </div>
+
+  <div class="kicker">IV · INICIATIVA 02 · ESCOPO &amp; ALGORITMOS</div>
+  <h1>Escopo, algoritmos &amp; <span class="italic-accent">pendências.</span></h1>
+  <p class="lead" style="margin-top: 8px;">4 algoritmos clínicos validados · 4 desfechos possíveis · Materiais TopMed.</p>
+
+  <div class="grid-2 mt-24">
+    <div>
+      <h2>4 algoritmos clínicos</h2>
+      <div class="alg-card">
+        <div class="n">1</div>
+        <div>
+          <h4>Síndrome Viral</h4>
+          <p>Triagem de sintomas gripais, febre e infecções respiratórias</p>
+        </div>
+      </div>
+      <div class="alg-card">
+        <div class="n">2</div>
+        <div>
+          <h4>Diarreia</h4>
+          <p>Avaliação de quadros gastrointestinais e risco de desidratação</p>
+        </div>
+      </div>
+      <div class="alg-card">
+        <div class="n">3</div>
+        <div>
+          <h4>Cefaleia</h4>
+          <p>Classificação de dores de cabeça e identificação de sinais de alerta</p>
+        </div>
+      </div>
+      <div class="alg-card">
+        <div class="n">4</div>
+        <div>
+          <h4>Sintomas Urinários</h4>
+          <p>Triagem de infecções urinárias e sintomas do trato urinário</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2>Desfechos possíveis</h2>
+      <div class="scope-block green">
+        <h4>🏠  Autocuidado</h4>
+        <p>Orientações e monitoramento domiciliar</p>
+      </div>
+      <div class="scope-block mid">
+        <h4>💻  Teleconsulta</h4>
+        <p>Agendamento de consulta remota</p>
+      </div>
+      <div class="scope-block">
+        <h4>🏥  Presencial</h4>
+        <p>Encaminhamento a unidade de saúde</p>
+      </div>
+      <div class="scope-block warn">
+        <h4>🚨  Emergência</h4>
+        <p>Acionamento imediato de emergência (SAMU/UPA/EH)</p>
+      </div>
+
+      <h2 class="mt-24">Materiais TopMed</h2>
+      <table class="data">
+        <tbody>
+          <tr><td>Documentação API de elegibilidade</td><td class="right"><span class="pill pill-green">RECEBIDO</span></td></tr>
+          <tr><td>CPFs de teste (ambiente sandbox)</td><td class="right"><span class="pill pill-green">RECEBIDO</span></td></tr>
+          <tr><td>Lista fechada de desfechos</td><td class="right"><span class="pill pill-green">RECEBIDO</span></td></tr>
+          <tr><td>KPIs desejados para o dashboard</td><td class="right"><span class="pill pill-green">RECEBIDO</span></td></tr>
+          <tr><td>Algoritmos clínicos (4 Excel)</td><td class="right"><span class="pill pill-green">RECEBIDO</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout mt-16">
+    <p class="body-text"><b>Estimativa total:</b> 14–20 dias úteis após recebimento dos materiais pendentes. POC roda 15 dias com acompanhamento via dashboard.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>10</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     IV · INICIATIVA 02 — PRÓXIMOS PASSOS
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">IV · INICIATIVA 02 · PRÓXIMOS PASSOS</div>
+  </div>
+
+  <div class="kicker">IV · INICIATIVA 02 · PRÓXIMOS PASSOS</div>
+  <h1>Próximos passos · <span class="italic-accent">POC Triagem por Voz.</span></h1>
+  <p class="lead" style="margin-top: 10px;">Ações imediatas para desbloqueio e avanço da iniciativa.</p>
+
+  <div class="mt-24">
+    <div class="status-row">
+      <div class="step-num-mini">01</div>
+      <div class="body">
+        <div class="actv">Dashboard de logs + KPIs + números de homologação/produção</div>
+        <p>Entrega completa do dashboard com logs e KPIs, junto com números dedicados de homologação e produção para a equipe TopMed.</p>
+      </div>
+      <div class="resp">Doutor-AI</div>
+      <div class="stat-tag stat-green">ENTREGUE</div>
+    </div>
+
+    <div class="status-row">
+      <div class="step-num-mini">02</div>
+      <div class="body">
+        <div class="actv">Melhorias no agente de voz da triagem</div>
+        <p>Implementação de melhorias no agente, tornando-o mais fluido — como o agente usado na demonstração do Maurício.</p>
+      </div>
+      <div class="resp">TopMed + Doutor-AI</div>
+      <div class="stat-tag stat-green">ENTREGUE</div>
+    </div>
+
+    <div class="status-row">
+      <div class="step-num-mini">03</div>
+      <div class="body">
+        <div class="actv">Relatório de resultados de testes + áudios</div>
+        <p>Recebimento de um relatório consolidado dos resultados de testes realizados, juntamente com os áudios dessas execuções.</p>
+      </div>
+      <div class="resp">TopMed</div>
+      <div class="stat-tag stat-pending">SUGESTÃO 08/05</div>
+    </div>
+
+    <div class="status-row">
+      <div class="step-num-mini">04</div>
+      <div class="body">
+        <div class="actv">Implementação das melhorias + novo relatório</div>
+        <p>Aplicação das melhorias conforme apontamentos do relatório do dia 08/05; geração de um novo relatório de testes a ser compartilhado até 14/05.</p>
+      </div>
+      <div class="resp">TopMed + Doutor-AI</div>
+      <div class="stat-tag stat-pending">PENDENTE</div>
+    </div>
+  </div>
+
+  <div class="callout mt-24">
+    <p class="body-text">O avanço da iniciativa depende do recebimento de materiais e decisões confirmadas nas próximas reuniões.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>11</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     V · SECTION COVER — INICIATIVA 03
+     ============================================================ -->
+<div class="section-cover">
+  <div>
+    <div class="roman">V</div>
+    <div class="mono-tag" style="color: var(--green);">▸  INICIATIVA 03 · PRODUÇÃO</div>
+  </div>
+  <div>
+    <h1 class="display">Copilotos<br>de IA para<br><span class="italic-accent">Telemedicina.</span></h1>
+    <div class="divider" style="background: var(--green); opacity: .9;"></div>
+    <p class="lead-white">Integração nativa na <b>Plataforma Saúde24h</b> · 6 tipos de atendimento · 4 canais de entrada · Kick-off com Área de Produtos.</p>
+  </div>
+  <div class="footer-line">
+    <div>PRODUÇÃO · KICK-OFF FORMAL</div>
+    <div>INICIATIVA 03 / 03</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     V · INICIATIVA 03 — CONTEXTO
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">V · INICIATIVA 03 · COPILOTOS</div>
+  </div>
+
+  <div class="kicker">V · INICIATIVA 03 · CONTEXTO</div>
+  <h1>Copilotos · <span class="italic-accent">contexto.</span></h1>
+  <p class="lead" style="margin-top: 8px;">Plataforma Saúde24h · 6 tipos de atendimento · 4 canais de entrada.</p>
+
+  <div class="callout" style="background: rgba(16,185,129,.08); border-left-color: var(--green);">
+    <div class="mono-tag" style="color: var(--green); margin-bottom: 6px;">⚠  PRINCÍPIO ARQUITETURAL</div>
+    <p class="body-text">Os copilotos de IA serão integrados <b>nativamente</b> na Plataforma TopMed/Saúde24h — nenhum sistema paralelo será criado. <b>A IA se encaixa nos fluxos já existentes.</b></p>
+  </div>
+
+  <h2 class="mt-24">4 canais de entrada</h2>
+  <div class="grid-4 mt-8">
+    <div class="channel-card">
+      <h4>📞  0800</h4>
+      <p>URA → link SMS → chat IA</p>
+    </div>
+    <div class="channel-card">
+      <h4>💬  WhatsApp</h4>
+      <p>CPF → link → chat IA</p>
+    </div>
+    <div class="channel-card">
+      <h4>📱  APP</h4>
+      <p>Acesso direto ao Medy</p>
+    </div>
+    <div class="channel-card">
+      <h4>🔗  Integração</h4>
+      <p>APP/site parceiro → plataforma</p>
+    </div>
+  </div>
+
+  <h2 class="mt-24">6 tipos de atendimento — fluxo da plataforma</h2>
+  <div class="mt-8" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;">
+    <div class="tipo-card c1"><div class="n">1</div><div class="lbl">Triagem IA<br>(Medy)</div></div>
+    <div class="tipo-card c2"><div class="n">2</div><div class="lbl">Triagem<br>Enfermeiro</div></div>
+    <div class="tipo-card c3"><div class="n">3</div><div class="lbl">PA<br>Emocional</div></div>
+    <div class="tipo-card c4"><div class="n">4</div><div class="lbl">Teleconsulta<br>Agendada</div></div>
+    <div class="tipo-card c5"><div class="n">5</div><div class="lbl">PA Virtual<br>(urgência)</div></div>
+    <div class="tipo-card c6"><div class="n">6</div><div class="lbl">Teleconsulta<br>Assíncrona</div></div>
+  </div>
+
+  <div class="callout mt-24">
+    <p class="body-text">Os copilotos de IA se inserem <b>dentro deste fluxo existente</b> — ampliando a capacidade da operação sem criar novos sistemas.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>12</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     V · INICIATIVA 03 — SOLUÇÃO & ENTREGAS
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">V · INICIATIVA 03 · COPILOTOS</div>
+  </div>
+
+  <div class="kicker">V · INICIATIVA 03 · SOLUÇÃO &amp; ENTREGAS</div>
+  <h1>Solução &amp; <span class="italic-accent">entregas.</span></h1>
+  <p class="lead" style="margin-top: 8px;">PRODUÇÃO · Integração nativa na Plataforma TopMed · Kick-off com Área de Produtos.</p>
+
+  <div class="callout">
+    <p class="body-text"><b>Solução.</b> Copilotos de IA que se integram aos 6 tipos de atendimento da plataforma Saúde24h — assistindo médicos, enfermeiros e pacientes em tempo real. Cada copiloto é especializado em um momento da jornada: <b>triagem inteligente</b>, <b>suporte clínico durante a consulta</b>, <b>automação de pós-consulta</b> e <b>análise de jornada</b>. Toda integração via interfaces oficiais da plataforma TopMed.</p>
+  </div>
+
+  <h2 class="mt-24">4 fases de kick-off</h2>
+
+  <div class="grid-2 mt-16">
+    <div class="card" style="border-left: 3px solid var(--green);">
+      <div class="mono-tag mb-8" style="color: var(--green);">01 · KICK-OFF DO PROJETO</div>
+      <p class="body-text">Reunião formal com Área de Produtos TopMed. Apresentação do escopo, alinhamento de expectativas e definição de papéis. <b>Negócio + Produto</b>.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--blue-brand);">
+      <div class="mono-tag mb-8" style="color: var(--blue-brand);">02 · MAPEAMENTO DE FLUXOS</div>
+      <p class="body-text">Repasse técnico de todos os pontos de integração necessários entre Doutor-AI e TI/TopMed nos 6 tipos de atendimento. <b>TI/TopMed + Doutor-AI</b>.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--blue-brand);">
+      <div class="mono-tag mb-8" style="color: var(--blue-brand);">03 · INTERFACES &amp; METADADOS</div>
+      <p class="body-text">Definição das primeiras interfaces, contratos de API e estrutura de metadados. Base para o início da prototipação. <b>Doutor-AI (liderança)</b>.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--blue-deep);">
+      <div class="mono-tag mb-8" style="color: var(--blue-deep);">04 · PROTOTIPAÇÃO &amp; APROVAÇÃO</div>
+      <p class="body-text">Protótipo do fluxo para aprovação do usuário de negócio antes da implementação — evita retrabalho e alinha expectativas. <b>Negócio TopMed</b>.</p>
+    </div>
+  </div>
+
+  <div class="callout mt-24">
+    <p class="body-text">Datas orquestradas pelo Negócio e TI/TopMed — Doutor-AI garante as interfaces dentro do planejamento da plataforma.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>13</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     V · INICIATIVA 03 — INPUTS / OUTPUTS / RESULTADOS
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">V · INICIATIVA 03 · INPUTS / OUTPUTS / RESULTADOS</div>
+  </div>
+
+  <div class="kicker">V · INICIATIVA 03 · COPILOTOS POR MOMENTO DA JORNADA</div>
+  <h1>Copilotos por <span class="italic-accent">momento da jornada.</span></h1>
+  <p class="lead" style="margin-top: 8px;">PRODUÇÃO · Copilotos de IA para Telemedicina · Plataforma Saúde24h.</p>
+
+  <div class="grid-2 mt-24">
+    <div class="card card-accent">
+      <div class="flex-between">
+        <h3>🤖  Copiloto de Triagem (Medy+)</h3>
+        <span class="pill pill-pale">Atendimentos 1 e 2</span>
+      </div>
+      <p class="body-text mt-8">Aprimora a triagem IA com NLP avançado · detecta urgências · reduz abandono.</p>
+    </div>
+    <div class="card card-accent">
+      <div class="flex-between">
+        <h3>🩺  Copiloto Clínico (Consulta)</h3>
+        <span class="pill pill-pale">Atendimentos 3, 4 e 5</span>
+      </div>
+      <p class="body-text mt-8">Assistência ao médico: sugere condutas · preenche prontuário · detecta alertas.</p>
+    </div>
+    <div class="card card-accent">
+      <div class="flex-between">
+        <h3>📋  Copiloto de Pós-Consulta</h3>
+        <span class="pill pill-pale">Todos os atendimentos</span>
+      </div>
+      <p class="body-text mt-8">Automação de prescrições · lembretes de retorno · monitoramento de adesão.</p>
+    </div>
+    <div class="card card-accent">
+      <div class="flex-between">
+        <h3>📊  Copiloto Analytics</h3>
+        <span class="pill pill-pale">Operação TopMed</span>
+      </div>
+      <p class="body-text mt-8">Análise de jornada · dashboards em tempo real · alertas de SLA e performance.</p>
+    </div>
+  </div>
+
+  <div class="grid-3 mt-24">
+    <div class="card card-accent">
+      <div class="mono-tag mb-8">INPUTS</div>
+      <ul class="clean">
+        <li>Fluxos existentes da Plataforma Saúde24h</li>
+        <li>APIs e interfaces TI/TopMed definidas</li>
+        <li>Dados de jornada dos 6 tipos de atendimento</li>
+        <li>Protocolos clínicos Saúde24h/TopMed</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--green);">
+      <div class="mono-tag mb-8" style="color: var(--green);">OUTPUTS</div>
+      <ul class="clean">
+        <li>Copilotos integrados na plataforma oficial</li>
+        <li>Automação de condutas e pós-consulta</li>
+        <li>Dashboards de operação em tempo real</li>
+        <li>Interfaces documentadas entre as partes</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left: 3px solid #FF8C42;">
+      <div class="mono-tag mb-8" style="color: #FF8C42;">RESULTADOS ESPERADOS</div>
+      <ul class="clean">
+        <li>Escalabilidade dos 6 tipos de atendimento</li>
+        <li>Redução de carga operacional médica</li>
+        <li>Qualidade clínica com IA auxiliando decisões</li>
+        <li>Zero shadow systems — tudo na plataforma</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>14</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     V · INICIATIVA 03 — PRÓXIMOS PASSOS
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">V · INICIATIVA 03 · PRÓXIMOS PASSOS</div>
+  </div>
+
+  <div class="kicker">V · INICIATIVA 03 · PRÓXIMOS PASSOS</div>
+  <h1>Próximos passos · <span class="italic-accent">Copilotos Telemedicina.</span></h1>
+  <p class="lead" style="margin-top: 10px;">Ações imediatas para desbloqueio e avanço da iniciativa.</p>
+
+  <div class="mt-24">
+    <div class="status-row green-edge">
+      <div class="step-num-mini">01</div>
+      <div class="body">
+        <div class="actv">Mapeamento de fluxos da Saúde24h ↔ API Doutor-AI</div>
+        <p>Entrega do mapeamento de fluxos da Saúde24h. Pendente com equipe TopMed.</p>
+      </div>
+      <div class="resp" style="background: #E8F8F0; color: var(--green);">Negócio TopMed</div>
+      <div class="stat-tag stat-green">ENTREGUE</div>
+    </div>
+
+    <div class="status-row green-edge">
+      <div class="step-num-mini">02</div>
+      <div class="body">
+        <div class="actv">Reunião com Lucas, TopMed</div>
+        <p>Alinhamento e planejamento da versão final do documento de integração.</p>
+      </div>
+      <div class="resp" style="background: #E8F8F0; color: var(--green);">TopMed + Doutor-AI</div>
+      <div class="stat-tag stat-green">REALIZADA 15/04</div>
+    </div>
+
+    <div class="status-row green-edge">
+      <div class="step-num-mini">03</div>
+      <div class="body">
+        <div class="actv">Primeira versão do documento atualizado de integração</div>
+        <p>Entrega da primeira versão do documento atualizado de integração.</p>
+      </div>
+      <div class="resp" style="background: #E8F8F0; color: var(--green);">Doutor-AI</div>
+      <div class="stat-tag stat-green">ENTREGUE</div>
+    </div>
+
+    <div class="status-row green-edge">
+      <div class="step-num-mini">04</div>
+      <div class="body">
+        <div class="actv">Cronograma de desenvolvimento</div>
+        <p>Entrega do cronograma de desenvolvimento da iniciativa (disponível na Seção VII).</p>
+      </div>
+      <div class="resp" style="background: #E8F8F0; color: var(--green);">Doutor-AI</div>
+      <div class="stat-tag stat-green">ENTREGUE</div>
+    </div>
+  </div>
+
+  <div class="callout mt-24">
+    <p class="body-text">O avanço dos projetos depende do recebimento de materiais e decisões confirmadas nas reuniões de alinhamento.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>15</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     VI · CRONOGRAMA CONSOLIDADO
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">VI · CRONOGRAMA CONSOLIDADO</div>
+  </div>
+
+  <div class="kicker">VI · CRONOGRAMA CONSOLIDADO</div>
+  <h1>Cronograma <span class="italic-accent">consolidado.</span></h1>
+  <p class="lead" style="margin-top: 8px;">Visão integrada das três iniciativas · Março a Maio/26+.</p>
+
+  <table class="data mt-24">
+    <thead>
+      <tr>
+        <th style="width: 22%;">Iniciativa</th>
+        <th class="center">Mar/26 · S1-S2</th>
+        <th class="center">Mar/26 · S3-S4</th>
+        <th class="center">Abr/26 · S1-S2</th>
+        <th class="center">Abr/26 · S3-S4</th>
+        <th class="center">Mai/26 +</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>🔬  Auditoria PACK</b></td>
+        <td class="center" style="background: #FFE6D5; color: #B85426; font-weight: 600;">✓  Chamadas recebidas</td>
+        <td class="center" style="background: #FFE6D5; color: #B85426; font-weight: 600;">IA + Tabul.<br>12–13/03<br>Validação 16/03</td>
+        <td class="center" style="background: #FFE6D5; color: #B85426; font-weight: 600;">Alinhamento TI</td>
+        <td class="center" style="background: var(--paper); color: var(--gray-500);">—</td>
+        <td class="center" style="background: var(--paper); color: var(--gray-500);">—</td>
+      </tr>
+      <tr>
+        <td><b>🎤  Triagem por Voz</b></td>
+        <td class="center" style="background: var(--blue-light); color: var(--white); font-weight: 600;">✓  Requisitos recebidos</td>
+        <td class="center" style="background: var(--blue-light); color: var(--white); font-weight: 600;">Build agente voz<br>15 dias úteis</td>
+        <td class="center" style="background: var(--blue-brand); color: var(--white); font-weight: 600;">POC 15 dias</td>
+        <td class="center" style="background: var(--blue-brand); color: var(--white); font-weight: 600;">Resultados</td>
+        <td class="center" style="background: var(--blue-deep); color: var(--white); font-weight: 600;">Continuidade</td>
+      </tr>
+      <tr>
+        <td><b>🚀  Copilotos Telemedicina</b></td>
+        <td class="center" style="background: rgba(16,185,129,.15); color: var(--green); font-weight: 600;">😊  Kick-off</td>
+        <td class="center" style="background: rgba(16,185,129,.15); color: var(--green); font-weight: 600;">Mapeam. Fluxos<br>Def. Interfaces<br>Prototipação</td>
+        <td class="center" style="background: rgba(16,185,129,.3); color: var(--green); font-weight: 600;">Implementação</td>
+        <td class="center" style="background: rgba(16,185,129,.45); color: var(--white); font-weight: 600;">Implementação</td>
+        <td class="center" style="background: var(--green); color: var(--white); font-weight: 600;">Continuidade</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout mt-24">
+    <p class="body-text">Cronograma sujeito a ajustes conforme disponibilização de materiais pendentes pela TopMed. <b>Objetivo principal:</b> organizar as diferentes frentes com alinhamento entre equipes e expectativas unificadas. Os cronogramas executivos detalhados de cada frente estão na Seção VII.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>16</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     VII · SECTION COVER — CRONOGRAMAS
+     ============================================================ -->
+<div class="section-cover">
+  <div>
+    <div class="roman">VII</div>
+    <div class="mono-tag">▸  CRONOGRAMAS EXECUTIVOS</div>
+  </div>
+  <div>
+    <h1 class="display"><span class="italic-accent">Cronogramas.</span></h1>
+    <div class="divider"></div>
+    <p class="lead-white">Cronograma executivo detalhado de cada iniciativa — base para o orçamento de implantação na Seção IX.</p>
+  </div>
+  <div class="footer-line">
+    <div>FRENTE 1 · FRENTE 2 · FRENTE 3</div>
+    <div>SEÇÃO VII / IX</div>
+  </div>
+</div>
+
+<!-- VII · CRONOGRAMA · FRENTE 1 · TRIAGEM (LANDSCAPE) -->
+<div class="cron-land">
+  <div style="display:flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--gray-300); padding-bottom: 8px;">
+    <div>
+      <h2 class="ttl">Cronograma · <span class="italic-accent">Frente 1 · Triagem.</span></h2>
+      <div class="cron-meta">12 semanas · 7 fases</div>
+    </div>
+    <div class="cron-meta" style="text-align: right;">
+      <div><b>376 horas Doutor-AI</b></div>
+      <div style="margin-top: 4px;">VII · CRONOGRAMA</div>
+    </div>
+  </div>
+
+  <img src="cron-triagem-1.jpg" class="cron-img-display" alt="Cronograma Triagem Clínica por Voz — N2">
+
+  <div style="position: absolute; bottom: 6mm; left: 14mm; right: 14mm; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; color: var(--gray-500);">
+    <div>v1.0 · 2026 · Cronograma Triagem Clínica por Voz — N2</div>
+    <div><b style="color: var(--chumbo);">17</b> / 26</div>
+  </div>
+</div>
+
+<!-- VII · CRONOGRAMA · FRENTE 2 · AUDITORIA (LANDSCAPE) -->
+<div class="cron-land">
+  <div style="display:flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--gray-300); padding-bottom: 8px;">
+    <div>
+      <h2 class="ttl">Cronograma · <span class="italic-accent">Frente 2 · Auditoria.</span></h2>
+      <div class="cron-meta">2 semanas · 6 fases</div>
+    </div>
+    <div class="cron-meta" style="text-align: right;">
+      <div><b>46 horas Doutor-AI</b></div>
+      <div style="margin-top: 4px;">VII · CRONOGRAMA</div>
+    </div>
+  </div>
+
+  <img src="cron-auditoria-1.jpg" class="cron-img-display" alt="Cronograma Auditoria de Consultas — via SFTP">
+
+  <div style="position: absolute; bottom: 6mm; left: 14mm; right: 14mm; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; color: var(--gray-500);">
+    <div>v1.0 · 2026 · Cronograma Auditoria de Consultas — via SFTP</div>
+    <div><b style="color: var(--chumbo);">18</b> / 26</div>
+  </div>
+</div>
+
+<!-- VII · CRONOGRAMA · FRENTE 3 · COPILOTO IA (LANDSCAPE) -->
+<div class="cron-land">
+  <div style="display:flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--gray-300); padding-bottom: 8px;">
+    <div>
+      <h2 class="ttl">Cronograma · <span class="italic-accent">Frente 3 · Copiloto IA.</span></h2>
+      <div class="cron-meta">7 semanas · 7 fases</div>
+    </div>
+    <div class="cron-meta" style="text-align: right;">
+      <div><b>226 horas Doutor-AI</b></div>
+      <div style="margin-top: 4px;">VII · CRONOGRAMA</div>
+    </div>
+  </div>
+
+  <img src="cron-copiloto-1.jpg" class="cron-img-display" alt="Cronograma Copiloto Médico TopMed">
+
+  <div style="position: absolute; bottom: 6mm; left: 14mm; right: 14mm; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; color: var(--gray-500);">
+    <div>v1.0 · 2026 · Cronograma Copiloto Médico TopMed</div>
+    <div><b style="color: var(--chumbo);">19</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     VIII · CONSOLIDADO DE HORAS TRABALHADAS
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">VIII · CONSOLIDADO DE HORAS</div>
+  </div>
+
+  <div class="kicker">VIII · CONSOLIDADO DE HORAS TRABALHADAS</div>
+  <h1>Consolidado de <span class="italic-accent">horas trabalhadas.</span></h1>
+  <p class="lead" style="margin-top: 10px;">Resumo das atividades executadas pela Doutor-AI até o momento.</p>
+
+  <div class="callout mt-16">
+    <div class="mono-tag" style="color: var(--blue-brand); margin-bottom: 6px;">SOBRE ESTA PÁGINA</div>
+    <p class="body-text">Esta página apresenta o <b>consolidado de horas executadas</b> pela equipe Doutor-AI nas três frentes de projeto desde o início da parceria. As horas estão segmentadas por frente, com totais em minutos, horas e valor a R$ 250,00/hora. O <b>detalhamento completo</b> — todas as atividades, datas, colaboradores e tempos individuais — está disponível no link da planilha ao final desta página.</p>
+  </div>
+
+  <h2 class="mt-24">Resumo consolidado</h2>
+  <table class="data mt-8">
+    <thead>
+      <tr>
+        <th style="width: 70px;">Frente</th>
+        <th>Projeto</th>
+        <th class="right">Minutos</th>
+        <th class="right">Horas</th>
+        <th class="right">Valor/hora</th>
+        <th class="right">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>1</b></td>
+        <td><b>Triagem clínica por voz</b></td>
+        <td class="num">24.310 min</td>
+        <td class="num">405h 10min</td>
+        <td class="num">R$ 250,00</td>
+        <td class="num">R$ 101.291,67</td>
+      </tr>
+      <tr>
+        <td><b>2</b></td>
+        <td><b>Copiloto de IA para telemedicina</b></td>
+        <td class="num">1.605 min</td>
+        <td class="num">26h 45min</td>
+        <td class="num">R$ 250,00</td>
+        <td class="num">R$ 6.687,50</td>
+      </tr>
+      <tr>
+        <td><b>3</b></td>
+        <td><b>Auditoria de atendimentos clínicos</b></td>
+        <td class="num">5.400 min</td>
+        <td class="num">90h 00min</td>
+        <td class="num">R$ 250,00</td>
+        <td class="num">R$ 22.500,00</td>
+      </tr>
+      <tr class="total">
+        <td><b>—</b></td>
+        <td><b>TOTAL CONSOLIDADO</b></td>
+        <td class="num">31.315 min</td>
+        <td class="num">521h 55min</td>
+        <td class="num">R$ 250,00</td>
+        <td class="num">R$ 130.479,17</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="link-card">
+    <div class="mono-tag">▸  PLANILHA COMPLETA · ACESSO TOTAL</div>
+    <h3>Detalhamento de atividades, horas e colaboradores</h3>
+    <p>Todas as atividades realizadas pela equipe Doutor-AI estão registradas na planilha abaixo — com data, colaborador, descrição da atividade e tempo dedicado.</p>
+    <div class="url-box"><a href="https://docs.google.com/spreadsheets/d/1ZUkAybTooVbPPIypoUVEDgGfWl2E-TsQ4B1kytO3vck/edit?usp=sharing">https://docs.google.com/spreadsheets/d/1ZUkAybTooVbPPIypoUVEDgGfWl2E-TsQ4B1kytO3vck/edit?usp=sharing</a></div>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>20</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     IX · ORÇAMENTO
+     ============================================================ -->
+<div class="page">
+  <div class="ph">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 80 60" fill="#0071BC" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="10" height="10" rx="2.5"/>
+        <rect x="4" y="32" width="10" height="10" rx="2.5"/>
+        <rect x="18" y="25" width="10" height="10" rx="2.5"/>
+        <path d="M34 10 L52 10 C 68 10 76 22 76 30 C 76 38 68 50 52 50 L34 50 Z"/>
+      </svg>
+      Doutor-AI · TopMed
+    </div>
+    <div class="section">IX · ORÇAMENTO</div>
+  </div>
+
+  <div class="kicker">IX · ORÇAMENTO DE IMPLANTAÇÃO</div>
+  <h1>Orçamento de <span class="italic-accent">implantação.</span></h1>
+  <p class="lead" style="margin-top: 10px;">Estimativa de implantação por frente · base: cronogramas executivos × R$ 250,00/hora.</p>
+
+  <div class="callout mt-16">
+    <div class="mono-tag" style="color: var(--blue-brand); margin-bottom: 6px;">METODOLOGIA</div>
+    <p class="body-text">O cálculo é direto: <b>horas previstas no cronograma de cada frente</b> (Seção VII) × <b>R$ 250,00/hora</b>. Os valores representam a estimativa preliminar de implantação e podem ser ajustados conforme a definição final de arquitetura, responsabilidades entre os times e eventuais ajustes identificados durante os testes.</p>
+  </div>
+
+  <h2 class="mt-24">Visão consolidada</h2>
+  <table class="data mt-8">
+    <thead>
+      <tr>
+        <th>Frente</th>
+        <th class="right">Horas estimadas</th>
+        <th class="right">Valor/hora</th>
+        <th class="right">Valor estimado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>Frente 1 · Triagem Clínica por Voz</b></td>
+        <td class="num">376h</td>
+        <td class="num">R$ 250,00</td>
+        <td class="num">R$ 94.000,00</td>
+      </tr>
+      <tr>
+        <td><b>Frente 2 · Auditoria de Consultas</b> <span style="font-weight: 400; color: var(--gray-500); font-size: 11px;">(via SFTP)</span></td>
+        <td class="num">46h</td>
+        <td class="num">R$ 250,00</td>
+        <td class="num">R$ 11.500,00</td>
+      </tr>
+      <tr>
+        <td><b>Frente 3 · Copilotos de IA para Telemedicina</b></td>
+        <td class="num">226h</td>
+        <td class="num">R$ 250,00</td>
+        <td class="num">R$ 56.500,00</td>
+      </tr>
+      <tr class="total">
+        <td><b>TOTAL ESTIMADO</b></td>
+        <td class="num">648h</td>
+        <td class="num">R$ 250,00</td>
+        <td class="num">R$ 162.000,00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="mt-16">Distribuição por frente</h2>
+  <div class="grid-3 mt-8">
+    <div class="key-block" style="border-left-color: #FF8C42;">
+      <div class="key-num" style="color: #FF8C42;">7,1%</div>
+      <div class="key-label">Frente 2 · Auditoria</div>
+      <div class="key-sub">R$ 11.500,00 · 46h (via SFTP)</div>
+    </div>
+    <div class="key-block">
+      <div class="key-num">58,0%</div>
+      <div class="key-label">Frente 1 · Triagem por Voz</div>
+      <div class="key-sub">R$ 94.000,00 · 376h</div>
+    </div>
+    <div class="key-block" style="border-left-color: var(--green);">
+      <div class="key-num" style="color: var(--green);">34,9%</div>
+      <div class="key-label">Frente 3 · Copilotos</div>
+      <div class="key-sub">R$ 56.500,00 · 226h</div>
+    </div>
+  </div>
+
+  <div class="callout mt-16">
+    <div class="mono-tag" style="color: var(--blue-brand); margin-bottom: 4px;">OBSERVAÇÕES</div>
+    <p style="font-size: 11px; line-height: 1.5; color: var(--chumbo);"><b>Auditoria · API vs. SFTP</b> — frente orçada nos dois cenários; a escolha do modelo orientará o cronograma final. Possível componente variável por auditoria, a definir em proposta complementar. Valores preliminares, sujeitos a ajustes conforme arquitetura final.</p>
+  </div>
+
+  <div class="pf">
+    <div>v1.0 · 2026</div>
+    <div class="pg"><b>21</b> / 26</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     CLOSING
+     ============================================================ -->
+<div class="closing">
+  <div style="position: absolute; top: 24mm; left: 24mm; font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; color: var(--blue-light);">▸  ENCERRAMENTO</div>
+
+  <div>
+    <h1 class="hero-closing">Juntos, construindo<br>a <i class="accent">Saúde do Futuro.</i></h1>
+    <div class="divider"></div>
+    <div class="signature"><b>Doutor-AI</b>  ×  <b>TopMed</b></div>
+  </div>
+
+  <div class="closing-footer">doutor-ai.com  ·  São Paulo · Maio 2026  ·  Andre Chade</div>
+</div>
+
+</body>
+</html>

@@ -780,7 +780,7 @@ def intro():
     c.setFont(F["xbit"],27)
     text(ML,y,"entrega.",F["xbit"],27,BLUE,tracking=-0.6)
     y-=30
-    intro_txt=("A Evidia não é \"IA pra hospital\". É a **camada de inteligência** que organiza a "
+    intro_txt=("A Evidia é a **camada de inteligência** que organiza a "
       "operação ambulatorial de ponta a ponta — **agenda, prontuário e um copiloto clínico** "
       "que sugere condutas ancoradas em protocolo — e devolve à operadora **governança clínica** "
       "mensurável: pertinência, qualidade, desfecho e custo. O **faturamento é executado pelo "

@@ -387,7 +387,7 @@ PART2=[
  dict(img=E(18), n="19", title="Governança · Adesão por CID-10", key="CID-10",
    sub="Aderência ao protocolo por diagnóstico, com classificação de gap.",
    crumb="doutor-ai.com / Analytics / Governança Clínica",
-   body=["A adesão é destrinchada **por CID-10**, com número de casos, percentual de aderência e classificação do gap (*bom*, *médio*, *atenção*, *crítico*). O sistema chama atenção para diagnósticos com forte componente subjetivo (ansiedade, ITU, dor abdominal) — onde a variabilidade é maior."],
+   body=["A adesão é destrinchada **por CID-10**, com número de casos, percentual de aderência e classificação do gap (*bom*, *médio*, *atenção*, *crítico*)."],
    bullets=["Aderência por diagnóstico, ordenada por criticidade.",
             "Destaque automático dos CIDs de pior adesão.",
             "Base para atualizar protocolos e direcionar treinamento."],

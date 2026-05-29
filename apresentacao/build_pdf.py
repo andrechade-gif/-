@@ -767,6 +767,18 @@ def cover():
         cx+=CW/4
     c.showPage()
 
+# ---- pill chips (deliverables) ----
+def chips(x,y,items,maxw,h=17,padx=10,gap=6,vgap=7,fs=8.4):
+    cx=x; cy=y
+    for t in items:
+        w=sw(t,F["semi"],fs)+2*padx
+        if cx+w>x+maxw and cx>x:
+            cx=x; cy-=h+vgap
+        rrect(cx,cy-h,w,h,h/2,fill=BLUE_PALE,stroke=None)
+        text(cx+padx,cy-h+5.2,t,F["semi"],fs,BLUE)
+        cx+=w+gap
+    return cy-h
+
 # ---- INTRO (journey) ----
 def intro():
     global pageno; pageno+=1
@@ -780,13 +792,20 @@ def intro():
     c.setFont(F["xbit"],27)
     text(ML,y,"entrega.",F["xbit"],27,BLUE,tracking=-0.6)
     y-=30
-    intro_txt=("A Evidia é a **camada de inteligência** que organiza a "
+    intro_txt=("**Camada de inteligência** que organiza a "
       "operação ambulatorial de ponta a ponta — **agenda, prontuário e um copiloto clínico** "
       "que sugere condutas ancoradas em protocolo — e devolve à operadora **governança clínica** "
       "mensurável: pertinência, qualidade, desfecho e custo. O **faturamento é executado pelo "
       "TOTVS**, que recebe da Evidia a conta já codificada e auditada.")
     y=rich(ML,y,intro_txt,CW,base=("Inter-Regular",10.5),col=G700,leading=16.5)
-    y-=8
+    y-=12
+    # what is delivered
+    kicker(ML,y,"O que é entregue"); y-=18
+    entregaveis=["Agenda & Check-in","Prontuário eletrônico 360°","Copiloto clínico",
+                 "Autorização / elegibilidade","Codificação CID · TUSS · CBHPM",
+                 "Auditoria clínica & glosa preventiva","Governança clínica & relatórios",
+                 "Integração de dados → TOTVS","Assinatura digital ICP-Brasil"]
+    y=chips(ML,y,entregaveis,CW); y-=20
     # journey flow
     kicker(ML,y,"A jornada em 8 passos")
     y-=22

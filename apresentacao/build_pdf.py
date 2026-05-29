@@ -714,7 +714,7 @@ SECTIONS=[
   "A engenharia que sustenta tudo: agentes configuráveis, protocolos, contratos lidos por IA, automações, RBAC e a trilha de auditoria da própria IA.",
   PART3, [("11","TELAS"),("LGPD","/ CFM"),("ICP","BRASIL")]),
 ]
-NCTX = 4   # context pages: problema, dores->soluções, arquitetura, mapa de agentes
+NCTX = 0   # context pages removed
 TOTAL = 1 + 1 + NCTX + sum(1+len(s[3]) for s in SECTIONS) + 1   # cover + intro + contexto + (divider+screens) + closing
 
 # =====================================================================
@@ -796,7 +796,7 @@ def intro():
       "operação ambulatorial de ponta a ponta — **agenda, prontuário e um copiloto clínico** "
       "que sugere condutas ancoradas em protocolo — e devolve à operadora **governança clínica** "
       "mensurável: pertinência, qualidade, desfecho e custo. O **faturamento é executado pelo "
-      "TOTVS**, que recebe a conta já codificada e auditada.")
+      "TOTVS**, que recebe a conta já codificada.")
     y=rich(ML,y,intro_txt,CW,base=("Inter-Regular",10.5),col=G700,leading=16.5)
     y-=8
     # journey flow
@@ -807,8 +807,8 @@ def intro():
            ("03","Autorização","Elegibilidade com a operadora"),
            ("04","Prontuário","Visão 360° do paciente"),
            ("05","Copiloto","Conduta ancorada em protocolo"),
-           ("06","Codificação & Auditoria","CID/TUSS + glosa preventiva"),
-           ("07","Faturamento → TOTVS","Conta auditada vai ao TOTVS"),
+           ("06","Codificação","CID · TUSS · CBHPM"),
+           ("07","Faturamento → TOTVS","Conta codificada vai ao TOTVS"),
            ("08","Governança","Relatórios para a operadora")]
     cols=4; gap=8; bw=(CW-(cols-1)*gap)/cols; bh=66
     for i,(nn,tt,dd) in enumerate(steps):
@@ -826,8 +826,8 @@ def intro():
             text(bx+bw+1.2,by-bh/2-3,"›",F["bold"],11,BLUE_LIGHT)
     y-=2*bh+12+22
     # TOTVS / billing note (height fits all text inside)
-    nt=("Codifica (CID/TUSS/CBHPM) e aplica glosa preventiva, garantindo que a conta chegue "
-        "limpa. O **TOTVS** faz a integração com as operadoras e a **emissão do faturamento**.")
+    nt=("Codifica (CID/TUSS/CBHPM), garantindo que a conta chegue limpa. O **TOTVS** "
+        "faz a integração com as operadoras e a **emissão do faturamento**.")
     nlines=len(wrap(nt.replace("**",""),"Inter-Regular",9,CW-28))
     boxh=20+nlines*13.5+12
     rrect(ML,y-boxh,CW,boxh,6,fill=BLUE_PALE,stroke=None)
@@ -1129,10 +1129,6 @@ def agents_map_page():
 # =====================================================================
 cover()
 intro()
-prob_page()
-dores_page()
-arch_page()
-agents_map_page()
 for roman,title,desc,screens,stats in SECTIONS:
     divider(roman,title,desc,stats)
     label=f"Parte {roman}"

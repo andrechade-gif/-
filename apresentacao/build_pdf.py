@@ -787,10 +787,10 @@ def intro():
     y=PAGE_H-92
     kicker(ML,y,"Visão Geral · A Camada de Inteligência Clínica")
     y-=30
-    text(ML,y,"O que a Evidia",F["xbold"],27,CHUMBO,tracking=-0.6)
+    text(ML,y,"O que é",F["xbold"],27,CHUMBO,tracking=-0.6)
     y-=31
     c.setFont(F["xbit"],27)
-    text(ML,y,"entrega.",F["xbit"],27,BLUE,tracking=-0.6)
+    text(ML,y,"entregue.",F["xbit"],27,BLUE,tracking=-0.6)
     y-=30
     intro_txt=("**Camada de inteligência** que organiza a "
       "operação ambulatorial de ponta a ponta — **agenda, prontuário e um copiloto clínico** "
@@ -798,14 +798,7 @@ def intro():
       "mensurável: pertinência, qualidade, desfecho e custo. O **faturamento é executado pelo "
       "TOTVS**, que recebe a conta já codificada e auditada.")
     y=rich(ML,y,intro_txt,CW,base=("Inter-Regular",10.5),col=G700,leading=16.5)
-    y-=12
-    # what is delivered
-    kicker(ML,y,"O que é entregue"); y-=18
-    entregaveis=["Agenda & Check-in","Prontuário eletrônico 360°","Copiloto clínico",
-                 "Autorização / elegibilidade","Codificação CID · TUSS · CBHPM",
-                 "Auditoria clínica & glosa preventiva","Governança clínica & relatórios",
-                 "Integração de dados → TOTVS","Assinatura digital ICP-Brasil"]
-    y=chips(ML,y,entregaveis,CW); y-=20
+    y-=8
     # journey flow
     kicker(ML,y,"A jornada em 8 passos")
     y-=22

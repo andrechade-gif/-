@@ -815,8 +815,7 @@ def intro():
     y-=2*bh+12+22
     # TOTVS / billing note (height fits all text inside)
     nt=("A Evidia codifica (CID/TUSS/CBHPM) e aplica glosa preventiva, garantindo que a conta chegue "
-        "limpa. O **TOTVS** faz a integração com as operadoras e a **emissão do faturamento**. "
-        "Esta proposta é a primeira para a operadora — escopo ambulatorial, sem pronto-socorro ou internação.")
+        "limpa. O **TOTVS** faz a integração com as operadoras e a **emissão do faturamento**.")
     nlines=len(wrap(nt.replace("**",""),"Inter-Regular",9,CW-28))
     boxh=20+nlines*13.5+12
     rrect(ML,y-boxh,CW,boxh,6,fill=BLUE_PALE,stroke=None)

@@ -1072,7 +1072,7 @@ def arch_page():
     y=PAGE_H-92
     kicker(ML,y,"Contexto · Arquitetura"); y-=28
     head(ML,y,"Integra. Não substitui.","Não substitui."); y-=18
-    text(ML,y,"A plataforma se conecta ao stack atual, orquestra os dados e devolve ações — o faturamento sai pelo TOTVS.",F["med"],10,G700); y-=24
+    text(ML,y,"Conexão com o stack atual, orquestração dos dados e devolução de ações — o faturamento sai pelo TOTVS.",F["med"],10,G700); y-=24
     colsd=[("01 · ENTRADA",BLUE_DEEP,["Sistemas existentes","EHR / Prontuário","Sistemas da operadora","TISS / TUSS","Contratos & protocolos"]),
            ("02 · ORQUESTRAÇÃO",BLUE,["Camada de inteligência","Modelagem de regras","Cruzamento de dados","Governança & auditoria","Segurança & rastreio"]),
            ("03 · EXECUÇÃO",BLUE_MID,["Agentes de IA","Autorização","Copiloto & condutas","Codificação","Auditoria & glosa"]),

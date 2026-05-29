@@ -237,9 +237,9 @@ PART1=[
  dict(img=E(3), n="04", title="Consulta", key="Consulta",
    sub="A lista de atendimentos do profissional, do agendamento ao encerramento.",
    crumb="doutor-ai.com / Operações / Consulta",
-   body=["A **Consulta** reúne os atendimentos do profissional com paciente, especialidade, fluxo (ambulatório, telemedicina), data/hora e status (*agendada*, *encerrada*). Cada linha abre o atendimento e dá acesso ao prontuário e ao copiloto clínico."],
+   body=["A **Consulta** reúne os atendimentos do profissional com paciente, especialidade, fluxo, data/hora e status (*agendada*, *encerrada*). Cada linha abre o atendimento e dá acesso ao prontuário e ao copiloto clínico."],
    bullets=["Visão única de todos os atendimentos, com filtro por médico e especialidade.",
-            "Suporte a consulta presencial e teleconsulta no mesmo fluxo.",
+            "Status do atendimento (agendada, encerrada) sempre visível.",
             "Um clique em `Abrir` leva ao prontuário e ao copiloto da consulta."],
    agents=None),
 

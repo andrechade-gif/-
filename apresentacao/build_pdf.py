@@ -256,7 +256,7 @@ PART1=[
  dict(img=E(4), n="06", title="Copiloto do Médico · Check-Out", key="Copiloto",
    sub="O coração clínico: sugestões de conduta e protocolos a cada atendimento.",
    crumb="doutor-ai.com / Operações / Checkout",
-   body=["Esta é a tela que diferencia a Evidia. Ao encerrar o atendimento, o **Copiloto** lê o contexto clínico e propõe a conduta — exames, prescrições e encaminhamentos — sempre **ancorada em protocolo** e com *justificativa* e *evidência* rastreáveis. No exemplo, 6 sugestões de conduta, todas com origem em protocolo clínico (ex.: `Protocolo_vascular_002`).",
+   body=["Esta é a tela que diferencia a plataforma. Ao encerrar o atendimento, o **Copiloto** lê o contexto clínico e propõe a conduta — exames, prescrições e encaminhamentos — sempre **ancorada em protocolo** e com *justificativa* e *evidência* rastreáveis. No exemplo, 6 sugestões de conduta, todas com origem em protocolo clínico (ex.: `Protocolo_vascular_002`).",
          "O médico aceita, ajusta ou recusa cada item — inclusive por chat em linguagem natural (\"Receita de Dipirona 500mg 6/6h\"). Alertas de **interação medicamentosa** e de **pertinência** aparecem em tempo real, e tudo é assinado digitalmente com validade **ICP-Brasil**."],
    bullets=["Sugestões de exames, prescrições e encaminhamentos a partir do prontuário e do protocolo.",
             "Cada sugestão traz *justificativa* + *evidência* (protocolo-fonte) — nada é caixa-preta.",
@@ -301,8 +301,8 @@ PART1=[
  dict(img=E(10), n="10", title="Faturamento → TOTVS", key="TOTVS",
    sub="Consolidação de guias e lotes — os dados seguem ao TOTVS para faturar.",
    crumb="doutor-ai.com / Operações / Faturamento",
-   body=["A Evidia consolida **guias, lotes, glosas e recursos** por convênio e período, com a foto financeira do mês (faturado, glosa estimada, recebido, em recurso). A partir daqui, os **dados estruturados são enviados ao TOTVS**, responsável pela integração com as operadoras e pela **emissão do faturamento**.",
-         "Ou seja: a Evidia garante que a conta chega **limpa, codificada e auditada** ao TOTVS — que executa o faturamento junto às operadoras."],
+   body=["Consolida **guias, lotes, glosas e recursos** por convênio e período, com a foto financeira do mês (faturado, glosa estimada, recebido, em recurso). A partir daqui, os **dados estruturados são enviados ao TOTVS**, responsável pela integração com as operadoras e pela **emissão do faturamento**.",
+         "Ou seja: a conta chega **limpa, codificada e auditada** ao TOTVS — que executa o faturamento junto às operadoras."],
    bullets=["Organização de lotes por convênio, período e status (enviado, processado, pago).",
             "Visão de glosa estimada e de casos em recurso.",
             "Entrega dos dados clínicos e de cobrança, já auditados, ao **TOTVS** para o faturamento."],
@@ -638,7 +638,7 @@ PART3=[
    sub="A base de protocolos que governa todas as sugestões e auditorias.",
    crumb="doutor-ai.com / Configurações / Protocolos",
    body=["Os **Protocolos** são a fonte da verdade clínica. Cada um (ex.: *Síndrome Gripal — Ficha Técnica e PACK*) reúne **fontes** (PDFs, manuais e diretrizes), **critérios de auditoria com peso** e um **algoritmo decisório** editável em árvore. É contra esta base que o copiloto sugere e a auditoria avalia.",
-         "Protocolos indexados garantem que toda sugestão e todo laudo tenham origem rastreável — o alicerce da explicabilidade da Evidia."],
+         "Protocolos indexados garantem que toda sugestão e todo laudo tenham origem rastreável — o alicerce da explicabilidade da plataforma."],
    bullets=["Fontes, critérios ponderados e algoritmo de decisão por protocolo.",
             "Editor de árvore de decisão para a equipe clínica.",
             "Indexação que torna sugestões e auditorias rastreáveis."],
@@ -696,7 +696,7 @@ PART3=[
  dict(img=E(51), n="52", title="Integrações", key="Integrações",
    sub="Conectores clínicos, de compliance e de convênios.",
    crumb="doutor-ai.com / Configurações / Integrações",
-   body=["As **Integrações** conectam a Evidia ao ecossistema: **HL7/FHIR** (interoperabilidade clínica), **e-vidas (ICP-Brasil)** (assinatura qualificada), **TISS/TUSS** e os *webservices* das operadoras (Unimed, Bradesco, Amil) para elegibilidade e autorização — com volume, latência e erros monitorados por conector. É também por aqui que trafegam os dados para o **TOTVS**."],
+   body=["As **Integrações** conectam a plataforma ao ecossistema: **HL7/FHIR** (interoperabilidade clínica), **e-vidas (ICP-Brasil)** (assinatura qualificada), **TISS/TUSS** e os *webservices* das operadoras (Unimed, Bradesco, Amil) para elegibilidade e autorização — com volume, latência e erros monitorados por conector. É também por aqui que trafegam os dados para o **TOTVS**."],
    bullets=["Padrões clínicos (HL7/FHIR) e de assinatura (ICP-Brasil).",
             "TISS/TUSS e webservices das operadoras monitorados.",
             "Conector de dados para o faturamento no TOTVS."],
@@ -750,7 +750,7 @@ def cover():
     c.line(ML,PAGE_H-440,ML+460,PAGE_H-440); c.setStrokeAlpha(1)
     # subtitle
     y=PAGE_H-470
-    sub=("A plataforma que a operadora vai comercializar: agenda, prontuário e "
+    sub=("A plataforma de inteligência clínica ambulatorial: agenda, prontuário e "
          "copiloto clínico com IA, governança clínica em tempo real e faturamento "
          "integrado ao TOTVS. Cada tela, cada agente, descrito.")
     c.setFillColorRGB(1,1,1)
@@ -796,7 +796,7 @@ def intro():
       "operação ambulatorial de ponta a ponta — **agenda, prontuário e um copiloto clínico** "
       "que sugere condutas ancoradas em protocolo — e devolve à operadora **governança clínica** "
       "mensurável: pertinência, qualidade, desfecho e custo. O **faturamento é executado pelo "
-      "TOTVS**, que recebe da Evidia a conta já codificada e auditada.")
+      "TOTVS**, que recebe a conta já codificada e auditada.")
     y=rich(ML,y,intro_txt,CW,base=("Inter-Regular",10.5),col=G700,leading=16.5)
     y-=12
     # what is delivered
@@ -833,7 +833,7 @@ def intro():
             text(bx+bw+1.2,by-bh/2-3,"›",F["bold"],11,BLUE_LIGHT)
     y-=2*bh+12+22
     # TOTVS / billing note (height fits all text inside)
-    nt=("A Evidia codifica (CID/TUSS/CBHPM) e aplica glosa preventiva, garantindo que a conta chegue "
+    nt=("Codifica (CID/TUSS/CBHPM) e aplica glosa preventiva, garantindo que a conta chegue "
         "limpa. O **TOTVS** faz a integração com as operadoras e a **emissão do faturamento**.")
     nlines=len(wrap(nt.replace("**",""),"Inter-Regular",9,CW-28))
     boxh=20+nlines*13.5+12
@@ -1040,7 +1040,7 @@ def dores_page():
     y=PAGE_H-92
     kicker(ML,y,"Contexto · Dores & Soluções"); y-=28
     head(ML,y,"Cada dor, uma resposta.","resposta"); y-=18
-    text(ML,y,"As dores recorrentes da operadora e como a Evidia responde a cada uma.",F["med"],10,G700); y-=22
+    text(ML,y,"As dores recorrentes da operadora e como a plataforma responde a cada uma.",F["med"],10,G700); y-=22
     pairs=[("Variabilidade de conduta","Copiloto sugere a conduta ancorada em protocolo, com justificativa e evidência rastreáveis.","sugestor-condutas"),
            ("Glosa por documentação / pertinência","Glosa preventiva e validação de pertinência barram o que não tem respaldo, antes do envio.","auditor-glosa-preventiva"),
            ("Auditoria amostral e reativa","Auditoria Clínica IA revisa 100% das consultas contra o protocolo, com laudo explicável.","auditor-protocolo"),
@@ -1072,9 +1072,9 @@ def arch_page():
     y=PAGE_H-92
     kicker(ML,y,"Contexto · Arquitetura"); y-=28
     head(ML,y,"Integra. Não substitui.","Não substitui."); y-=18
-    text(ML,y,"A Evidia se conecta ao stack atual, orquestra os dados e devolve ações — o faturamento sai pelo TOTVS.",F["med"],10,G700); y-=24
+    text(ML,y,"A plataforma se conecta ao stack atual, orquestra os dados e devolve ações — o faturamento sai pelo TOTVS.",F["med"],10,G700); y-=24
     colsd=[("01 · ENTRADA",BLUE_DEEP,["Sistemas existentes","EHR / Prontuário","Sistemas da operadora","TISS / TUSS","Contratos & protocolos"]),
-           ("02 · ORQUESTRAÇÃO",BLUE,["Camada Evidia","Modelagem de regras","Cruzamento de dados","Governança & auditoria","Segurança & rastreio"]),
+           ("02 · ORQUESTRAÇÃO",BLUE,["Camada de inteligência","Modelagem de regras","Cruzamento de dados","Governança & auditoria","Segurança & rastreio"]),
            ("03 · EXECUÇÃO",BLUE_MID,["Agentes de IA","Autorização","Copiloto & condutas","Codificação","Auditoria & glosa"]),
            ("04 · SAÍDA",GREEN,["Dashboards & ações","Governança clínica","Revisão humana","Documentos assinados","Dados → TOTVS (fatura)"])]
     gap=8; cw=(CW-3*gap)/4; ch=152; top=y

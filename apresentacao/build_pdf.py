@@ -847,7 +847,7 @@ def intro():
     y-=20
     hr=("Cada página apresenta **uma tela real da plataforma** e, logo abaixo, a descrição do que ela "
         "faz e dos **agentes de IA** que atuam ali. O material segue em três partes: a jornada operacional, "
-        "a inteligência & governança, e a arquitetura da plataforma.")
+        "a inteligência & governança, e a plataforma por dentro.")
     rich(ML,y,hr,CW,base=("Inter-Regular",9.6),col=G700,leading=14.5)
     c.showPage()
 

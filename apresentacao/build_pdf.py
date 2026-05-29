@@ -603,7 +603,7 @@ PART2=[
    agents=None),
 ]
 
-# ---- PART III — A PLATAFORMA POR DENTRO ----
+# ---- PART III — A ARQUITETURA DA PLATAFORMA ----
 PART3=[
  dict(img=E(42), n="43", title="Agentes IA · Especialistas Clínicos", key="Especialistas",
    sub="Prompt Builder: agentes por especialidade, versionados e auditáveis.",
@@ -710,7 +710,7 @@ SECTIONS=[
  ("II","Inteligência Clínica & Governança",
   "Auditoria de 100% das consultas, pertinência, governança clínica, produção e financeiro — os relatórios que a operadora recebe.",
   PART2, [("30","TELAS"),("6","DIMENSÕES"),("100%","AUDITADO")]),
- ("III","A Plataforma por Dentro",
+ ("III","A Arquitetura da Plataforma",
   "A engenharia que sustenta tudo: agentes configuráveis, protocolos, contratos lidos por IA, automações, RBAC e a trilha de auditoria da própria IA.",
   PART3, [("11","TELAS"),("LGPD","/ CFM"),("ICP","BRASIL")]),
 ]
@@ -847,7 +847,7 @@ def intro():
     y-=20
     hr=("Cada página apresenta **uma tela real da plataforma** e, logo abaixo, a descrição do que ela "
         "faz e dos **agentes de IA** que atuam ali. O material segue em três partes: a jornada operacional, "
-        "a inteligência & governança, e a plataforma por dentro.")
+        "a inteligência & governança, e a arquitetura da plataforma.")
     rich(ML,y,hr,CW,base=("Inter-Regular",9.6),col=G700,leading=14.5)
     c.showPage()
 

@@ -1011,7 +1011,7 @@ def prob_page():
         text(bx2+12,ry,b,F["semi"],8.8,CHUMBO)
         ry-=17
     y-=ph+18
-    note_box(y,"NOTA","As telas e os indicadores deste material são **demonstrativos** — os números ilustram o funcionamento da plataforma e não representam dados reais de operação.")
+    note_box(y,"NOTA","Os dados e números exibidos neste material são **apenas demonstrativos** — ilustram o funcionamento da plataforma e não representam dados reais de operação.")
     c.showPage()
 
 # ---- CONTEXT · DORES → SOLUÇÕES ----

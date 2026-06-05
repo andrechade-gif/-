@@ -324,7 +324,7 @@ add_text(s, M_LEFT, Inches(4.4), SW - M_LEFT - M_RIGHT, Inches(0.9),
 
 # Lead paragraph
 add_text(s, M_LEFT, Inches(5.85), Inches(8.5), Inches(0.8),
-    runs=[{"text": "Mais eficiência, inteligência operacional e suporte clínico para hospitais, operadoras, clínicas e plataformas de telemedicina.",
+    runs=[{"text": "Mais eficiência, inteligência operacional e suporte clínico para hospitais, operadoras e clínicas.",
            "font": FONT_SANS, "size": Pt(13),
            "color": RGBColor(0xFF,0xFF,0xFF)}],
     line_spacing=1.45)

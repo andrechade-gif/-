@@ -985,12 +985,12 @@ add_text(s, M_LEFT, Inches(1.35), Inches(12), Inches(1.3),
     ], line_spacing=1.0)
 
 steps_next = [
-    ("01 · ESCOPO",    "Definir a jornada prioritária"),
-    ("02 · PILOTO",    "Escolher unidade, canal ou fluxo piloto"),
-    ("03 · INSUMOS",   "Levantar protocolos e scripts existentes"),
-    ("04 · TÉCNICO",   "Alinhar integrações necessárias"),
-    ("05 · MÉTRICAS",  "Definir critérios de sucesso da POC"),
-    ("06 · EXECUÇÃO",  "Iniciar piloto controlado"),
+    ("01 · ESCOPO",         "Definir a jornada prioritária"),
+    ("02 · FRENTE INICIAL", "Escolher unidade, canal ou fluxo de partida"),
+    ("03 · INSUMOS",        "Levantar protocolos e scripts existentes"),
+    ("04 · TÉCNICO",        "Alinhar integrações necessárias"),
+    ("05 · MÉTRICAS",       "Definir critérios de sucesso"),
+    ("06 · EXECUÇÃO",       "Iniciar pela frente escolhida — POC ou implantação direta"),
 ]
 cw = (SW - M_LEFT - M_RIGHT - Inches(0.3)) / 3
 ch = Inches(0.85)

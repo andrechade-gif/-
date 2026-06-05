@@ -626,64 +626,83 @@ footer(s, 6)
 # SLIDE 7 · CLIENTES E PERFIS
 # =============================================================
 s = prs.slides.add_slide(blank_layout)
-header(s, "06 · Clientes & perfis")
-kicker(s, M_LEFT, Inches(1.05), "CLIENTES & PERFIS DE CLIENTE")
-add_text(s, M_LEFT, Inches(1.35), Inches(12), Inches(1.3),
+header(s, "06 · Clientes & parceiros")
+kicker(s, M_LEFT, Inches(1.05), "CLIENTES & PARCEIROS")
+add_text(s, M_LEFT, Inches(1.35), Inches(12.5), Inches(1.7),
     runs=[
-        {"text": "Para quem ", "font": FONT_SANS, "size": Pt(36),
+        {"text": "Construído com ", "font": FONT_SANS, "size": Pt(34),
          "bold": True, "color": C_CHUMBO, "spacing": -1},
-        {"text": "construímos.", "font": FONT_SANS, "size": Pt(36),
+        {"text": "instituições", "font": FONT_SANS, "size": Pt(34),
          "bold": True, "italic": True, "color": C_BLUE_BRAND, "spacing": -1},
+        {"text": "de referência.", "font": FONT_SANS, "size": Pt(34),
+         "bold": True, "italic": True, "color": C_BLUE_BRAND, "spacing": -1,
+         "new_para": True},
     ], line_spacing=1.0)
 
-# Segmentos atendidos
-add_text(s, M_LEFT, Inches(2.85), Inches(8), Inches(0.22),
-    runs=[{"text": "▸  SEGMENTOS ATENDIDOS", "font": FONT_MONO, "size": Pt(8.5),
-           "color": C_BLUE_BRAND, "spacing": 1.6, "bold": True}])
+body_text(s, M_LEFT, Inches(3.05), Inches(11.8), Inches(0.7),
+    "Aplicações em hospitais, redes, operadoras, telemedicina, oncologia e "
+    "diagnóstico — em fluxos assistenciais e operacionais.",
+    size=Pt(12.5),
+    bold_terms=["hospitais, redes, operadoras, telemedicina, oncologia e diagnóstico"])
 
-segs = [
-    "Hospitais", "Redes de saúde", "Operadoras", "Clínicas & grupos médicos",
-    "Plataformas de telemedicina", "Empresas de gestão assistencial",
-    "Parceiros estratégicos", "Healthtechs & integradores",
+# 5 client cards
+clients = [
+    ("REDE HOSPITALAR",         "Rede D'Or São Luiz",
+     "Jornadas assistenciais e operacionais em ambiente hospitalar."),
+    ("ONCOLOGIA",               "Oncoclínicas&Co",
+     "Rede de oncologia e tratamentos especializados."),
+    ("DIAGNÓSTICO",             "Evidia",
+     "Medicina diagnóstica, imagem e patologia."),
+    ("TELEMEDICINA",            "Topmed",
+     "Telemedicina e atendimento à distância em escala."),
+    ("OPERADORA VERTICALIZADA", "Leve Saúde",
+     "Operadora verticalizada com modelo próprio de cuidado."),
 ]
-cw = (SW - M_LEFT - M_RIGHT - Inches(0.3)) / 4
-ch = Inches(0.5)
-cy0 = Inches(3.15)
-for i, t in enumerate(segs):
-    row, col = divmod(i, 4)
-    cx = M_LEFT + col * (cw + Inches(0.1))
-    cy = cy0 + row * (ch + Inches(0.1))
-    card(s, cx, cy, cw, ch, fill=C_PAPER, border=C_GRAY300)
-    add_text(s, cx + Inches(0.18), cy, cw - Inches(0.36), ch,
-        runs=[{"text": t, "font": FONT_SANS, "size": Pt(11),
-               "bold": True, "color": C_CHUMBO, "spacing": -0.2}],
-        anchor=MSO_ANCHOR.MIDDLE)
-
-# Referências
-ry = Inches(4.55)
-add_text(s, M_LEFT, ry, Inches(11), Inches(0.22),
-    runs=[{"text": "▸  REFERÊNCIAS E CONVERSAS COMERCIAIS A VALIDAR",
-           "font": FONT_MONO, "size": Pt(8.5),
-           "color": C_BLUE_BRAND, "spacing": 1.6, "bold": True}])
-
-placeholders = [
-    "[ Referência a validar ]", "[ Referência a validar ]",
-    "[ POC / Conversa comercial ]", "[ POC / Conversa comercial ]",
-]
-cy = ry + Inches(0.3)
-ch = Inches(0.7)
-for i, t in enumerate(placeholders):
+cw = (SW - M_LEFT - M_RIGHT - Inches(0.4)) / 5
+ch = Inches(1.85)
+cy = Inches(3.95)
+for i, (seg, name, dsc) in enumerate(clients):
     cx = M_LEFT + i * (cw + Inches(0.1))
-    card(s, cx, cy, cw, ch, fill=C_WHITE, border=C_GRAY300, dashed=True)
-    add_text(s, cx, cy, cw, ch,
-        runs=[{"text": t, "font": FONT_SANS, "size": Pt(10.5),
-               "color": C_GRAY500, "align": PP_ALIGN.CENTER}],
-        align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    card(s, cx, cy, cw, ch, fill=C_WHITE, border=C_GRAY300)
+    pad = Inches(0.18)
+    add_text(s, cx + pad, cy + pad, cw - 2*pad, Inches(0.24),
+        runs=[{"text": seg, "font": FONT_MONO, "size": Pt(8),
+               "color": C_BLUE_BRAND, "spacing": 1.7, "bold": True}])
+    add_text(s, cx + pad, cy + pad + Inches(0.3), cw - 2*pad, Inches(0.6),
+        runs=[{"text": name, "font": FONT_SANS, "size": Pt(14),
+               "bold": True, "color": C_CHUMBO, "spacing": -0.5}],
+        line_spacing=1.1)
+    add_text(s, cx + pad, cy + pad + Inches(0.95), cw - 2*pad, ch - Inches(1.15),
+        runs=[{"text": dsc, "font": FONT_SANS, "size": Pt(9),
+               "color": C_GRAY700}],
+        line_spacing=1.4)
 
-add_text(s, M_LEFT, cy + ch + Inches(0.2), SW - M_LEFT - M_RIGHT, Inches(0.3),
-    runs=[{"text": "Espaço reservado para inserir logos e nomes após validação interna. Não tratar nenhuma instituição como cliente ativo sem confirmação explícita.",
-           "font": FONT_SANS, "size": Pt(8.5), "color": C_GRAY500}],
-    line_spacing=1.4)
+# Scale insight card
+sy = Inches(5.95)
+sh = Inches(1.05)
+sx = M_LEFT
+sw = SW - M_LEFT - M_RIGHT
+card(s, sx, sy, sw, sh, fill=C_WHITE, border=C_GRAY300)
+pad = Inches(0.28)
+# Big +25
+add_text(s, sx + pad, sy + Inches(0.05), Inches(1.6), sh,
+    runs=[{"text": "+25", "font": FONT_SANS, "size": Pt(38),
+           "bold": True, "color": C_CHUMBO, "spacing": -2}],
+    anchor=MSO_ANCHOR.MIDDLE, line_spacing=1.0)
+# Title block
+tx = sx + Inches(1.95)
+tw = sw - Inches(2.2)
+add_text(s, tx, sy + Inches(0.16), tw, Inches(0.3),
+    runs=[{"text": "unidades / operadoras", "font": FONT_SANS, "size": Pt(15),
+           "bold": True, "color": C_CHUMBO, "spacing": -0.4}],
+    line_spacing=1.0)
+add_text(s, tx, sy + Inches(0.42), tw, Inches(0.28),
+    runs=[{"text": "Operadoras verticalizadas e redes regionais",
+           "font": FONT_SANS, "size": Pt(10.5), "color": C_GRAY700}])
+add_text(s, tx, sy + Inches(0.68), tw, Inches(0.28),
+    runs=[{"text": "Replicação do modelo de prontuário-com-IA em rede credenciada",
+           "font": FONT_SANS, "size": Pt(11),
+           "bold": True, "color": C_BLUE_BRAND, "spacing": -0.3}])
 
 footer(s, 7)
 

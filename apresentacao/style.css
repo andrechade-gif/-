@@ -654,3 +654,79 @@ html, body {
 
 /* ============ LOGO SVG ============ */
 .logo-svg { display: inline-block; vertical-align: middle; }
+
+/* ============ CLIENT CARD (slide 7) ============ */
+.client-card {
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.client-card .seg {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue-brand);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.client-card .name {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--chumbo);
+  margin-bottom: 2px;
+}
+.client-card .dsc {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--gray-700);
+}
+
+/* ============ SCALE INSIGHT CARD (slide 7) ============ */
+.scale-card {
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  border-radius: 14px;
+}
+.scale-card .big {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--chumbo);
+  flex-shrink: 0;
+}
+.scale-card .body { display: flex; flex-direction: column; gap: 6px; }
+.scale-card .ttl {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--chumbo);
+}
+.scale-card .sub {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--gray-700);
+}
+.scale-card .blue {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--blue-brand);
+  letter-spacing: -0.015em;
+  margin-top: 4px;
+}

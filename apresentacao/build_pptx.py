@@ -990,7 +990,7 @@ steps_next = [
     ("03 · INSUMOS",        "Levantar protocolos e scripts existentes"),
     ("04 · TÉCNICO",        "Alinhar integrações necessárias"),
     ("05 · MÉTRICAS",       "Definir critérios de sucesso"),
-    ("06 · EXECUÇÃO",       "Iniciar pela frente escolhida — POC ou implantação direta"),
+    ("06 · EXECUÇÃO",       "Iniciar pela frente escolhida"),
 ]
 cw = (SW - M_LEFT - M_RIGHT - Inches(0.3)) / 3
 ch = Inches(0.85)

@@ -645,20 +645,22 @@ body_text(s, M_LEFT, Inches(3.05), Inches(11.8), Inches(0.7),
     size=Pt(12.5),
     bold_terms=["hospitais, redes, operadoras e telemedicina"])
 
-# 3 client cards
+# 4 client cards
 clients = [
     ("REDE HOSPITALAR",         "Rede D'Or São Luiz",
      "Jornadas assistenciais e operacionais em ambiente hospitalar."),
+    ("REDE CREDENCIADA",        "Evidia",
+     "Do atendimento ao credenciado — auditoria e faturamento."),
     ("TELEMEDICINA",            "Topmed",
      "Telemedicina e atendimento à distância em escala."),
     ("OPERADORA VERTICALIZADA", "Leve Saúde",
      "Operadora verticalizada com modelo próprio de cuidado."),
 ]
-cw = (SW - M_LEFT - M_RIGHT - Inches(0.3)) / 3
+cw = (SW - M_LEFT - M_RIGHT - Inches(0.36)) / 4
 ch = Inches(1.85)
 cy = Inches(3.95)
 for i, (seg, name, dsc) in enumerate(clients):
-    cx = M_LEFT + i * (cw + Inches(0.15))
+    cx = M_LEFT + i * (cw + Inches(0.12))
     card(s, cx, cy, cw, ch, fill=C_WHITE, border=C_GRAY300)
     pad = Inches(0.18)
     add_text(s, cx + pad, cy + pad, cw - 2*pad, Inches(0.24),

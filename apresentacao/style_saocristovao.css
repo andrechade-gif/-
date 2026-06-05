@@ -33,3 +33,26 @@
   padding: 5px 10px;
   font-weight: 600;
 }
+
+/* Card de cliente em destaque (escopo similar) */
+.client-card.highlight {
+  border: 1.5px solid var(--blue-brand);
+  background: var(--blue-pale);
+  position: relative;
+}
+.client-card.highlight .seg { color: var(--blue-brand); }
+.client-card .scope-tag {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--white);
+  background: var(--blue-brand);
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-top: 6px;
+}
+

@@ -640,10 +640,10 @@ add_text(s, M_LEFT, Inches(1.35), Inches(12.5), Inches(1.7),
     ], line_spacing=1.0)
 
 body_text(s, M_LEFT, Inches(3.05), Inches(11.8), Inches(0.7),
-    "Aplicações em hospitais, redes, operadoras, telemedicina, oncologia e "
-    "diagnóstico — em fluxos assistenciais e operacionais.",
+    "Aplicações em hospitais, redes, operadoras e telemedicina "
+    "— em fluxos assistenciais e operacionais.",
     size=Pt(12.5),
-    bold_terms=["hospitais, redes, operadoras, telemedicina, oncologia e diagnóstico"])
+    bold_terms=["hospitais, redes, operadoras e telemedicina"])
 
 # 5 client cards
 clients = [

@@ -894,13 +894,14 @@ add_text(s, M_LEFT, Inches(1.35), Inches(12), Inches(1.3),
 
 # Left bullets
 bullets = [
-    ("Mais eficiência",    " no atendimento e em fluxos operacionais"),
-    ("Redução",            " de tarefas manuais e repetitivas"),
-    ("Melhor qualidade",   " da informação clínica registrada"),
-    ("Padronização",       " de protocolos entre unidades e equipes"),
-    ("Melhor experiência", " do paciente em toda a jornada"),
-    ("Apoio",              " consistente à tomada de decisão clínica"),
-    ("Escalabilidade",     " operacional com governança"),
+    ("Mais eficiência",        " no atendimento e em fluxos operacionais"),
+    ("Redução",                " de tarefas manuais e repetitivas"),
+    ("Melhor qualidade",       " da informação clínica registrada"),
+    ("Padronização",           " de protocolos entre unidades e equipes"),
+    ("Pertinência",            " clínica e financeira nas condutas"),
+    ("Apoio",                  " consistente à tomada de decisão clínica"),
+    ("Inteligência operacional"," com dados estruturados"),
+    ("Escalabilidade",         " operacional com governança"),
 ]
 bx = M_LEFT
 by0 = Inches(3.05)
@@ -922,7 +923,7 @@ ch = Inches(1.25)
 chips = [
     ("01", "Eficiência",  "Menos retrabalho e mais throughput por equipe.", False),
     ("02", "Segurança",   "Padronização, rastreabilidade e governança.",      False),
-    ("03", "Experiência", "Atendimento mais fluido para paciente e equipe.",  False),
+    ("03", "Pertinência", "Condutas e cobranças aderentes a protocolos e contratos.", False),
     ("04", "Escala",      "Capacidade ampliada sem perda de qualidade.",      False),
 ]
 for i, (n, t, d, prim) in enumerate(chips):

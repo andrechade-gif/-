@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Doutor-AI · Proposta de Valor Central · Arquitetura do Fluxo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,500&family=Geist:wght@400;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:      #FAFAF7;
+    --ink:     #101D33;
+    --ink-soft:#3D4657;
+    --blue:    #2563EB;
+    --gray:    #7A8291;
+    --rule:    #DCDDD8;
+    --card:    #FFFFFF;
+    --card-line:#E4E5E0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1920px;height:1080px;background:var(--bg);overflow:hidden;}
+  body{
+    font-family:'Geist',-apple-system,sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  @page{size:1920px 1080px;margin:0;}
+
+  .slide{
+    width:1920px;height:1080px;
+    padding:52px 110px 44px;
+    display:flex;flex-direction:column;
+    position:relative;
+  }
+
+  /* ---------- header ---------- */
+  .s-header{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:30px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand svg{display:block;}
+  .brand .wordmark{
+    font-family:'Geist';font-weight:600;font-size:21px;letter-spacing:-.01em;
+  }
+  .s-header .folio{
+    font-family:'Geist Mono';font-size:17px;letter-spacing:.14em;
+    color:var(--gray);text-transform:uppercase;
+  }
+  .s-header .folio b{color:var(--blue);font-weight:500;}
+
+  /* ---------- kicker + title ---------- */
+  .kicker{
+    font-family:'Geist Mono';font-weight:500;font-size:17px;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--blue);
+    margin-bottom:16px;
+  }
+  h1{
+    font-family:'Fraunces';font-optical-sizing:auto;font-weight:400;
+    font-size:53px;line-height:1.07;letter-spacing:-.015em;
+    max-width:1420px;margin-bottom:16px;
+  }
+  h1 em{
+    font-style:italic;font-weight:500;color:var(--blue);
+  }
+  .lede{
+    font-size:20px;line-height:1.45;color:var(--ink-soft);
+    max-width:1290px;margin-bottom:34px;
+  }
+  .lede strong{font-weight:600;color:var(--ink);}
+
+  /* ---------- flow ---------- */
+  .flow{
+    flex:1;display:grid;
+    grid-template-columns:236px 90px 1fr;
+    align-items:stretch;
+  }
+
+  /* PS node */
+  .ps-node{
+    align-self:center;
+    border:2px solid var(--ink);border-radius:14px;
+    background:var(--card);
+    padding:26px 22px;text-align:center;
+  }
+  .ps-node .ps{
+    font-family:'Fraunces';font-style:italic;font-weight:500;
+    font-size:62px;line-height:1;color:var(--ink);
+  }
+  .ps-node .ps-sub{
+    font-family:'Geist Mono';font-size:13.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--gray);margin-top:12px;line-height:1.6;
+  }
+  .ps-node .ps-q{
+    margin-top:13px;padding-top:13px;border-top:1px solid var(--rule);
+    font-size:15px;line-height:1.45;color:var(--ink-soft);
+  }
+
+  /* connector */
+  .connector{position:relative;}
+  .connector svg{position:absolute;inset:0;width:100%;height:100%;}
+
+  /* lanes */
+  .lanes{display:flex;flex-direction:column;gap:26px;justify-content:center;}
+  .lane{
+    display:grid;grid-template-columns:1fr 320px;gap:40px;
+    background:var(--card);border:1px solid var(--card-line);border-radius:14px;
+    padding:26px 40px 24px;
+    position:relative;
+  }
+  .lane.blue{border:1.5px solid var(--blue);}
+  .lane .tag{
+    position:absolute;top:-13px;left:44px;
+    font-family:'Geist Mono';font-weight:500;font-size:14.5px;
+    letter-spacing:.16em;text-transform:uppercase;
+    background:var(--ink);color:#FFF;
+    padding:4px 14px;border-radius:99px;
+  }
+  .lane.blue .tag{background:var(--blue);}
+  .lane h2{
+    font-family:'Fraunces';font-weight:400;font-size:29px;
+    letter-spacing:-.01em;margin:5px 0 9px;
+  }
+  .lane h2 .n{
+    font-family:'Geist Mono';font-weight:500;font-size:19px;
+    color:var(--blue);letter-spacing:.06em;vertical-align:24%;margin-right:14px;
+  }
+  .lane p{
+    font-size:17px;line-height:1.45;color:var(--ink-soft);max-width:980px;
+  }
+  .lane p strong{font-weight:600;color:var(--ink);}
+  .chips{display:flex;gap:10px;margin-top:13px;flex-wrap:wrap;}
+  .chip{
+    font-family:'Geist Mono';font-size:13px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-soft);
+    border:1px solid var(--rule);border-radius:99px;
+    padding:6px 14px;background:var(--bg);
+  }
+
+  /* metric block */
+  .metric{
+    border-left:1px solid var(--rule);padding-left:40px;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .metric .num{
+    font-family:'Fraunces';font-style:italic;font-weight:500;
+    font-size:72px;line-height:.95;color:var(--blue);letter-spacing:-.02em;
+    white-space:nowrap;
+  }
+  .metric .num small{font-size:42px;}
+  .metric .cap{
+    margin-top:12px;font-size:15.5px;line-height:1.4;color:var(--ink-soft);
+  }
+
+  /* ---------- footer ---------- */
+  .s-footer{
+    margin-top:30px;padding-top:20px;border-top:1px solid var(--rule);
+    display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:baseline;
+  }
+  .s-footer .flabel{
+    font-family:'Geist Mono';font-weight:500;font-size:15px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--blue);
+    white-space:nowrap;
+  }
+  .s-footer .ftext{
+    font-size:17px;line-height:1.45;color:var(--ink-soft);max-width:1400px;
+  }
+  .s-footer .ftext strong{font-weight:600;color:var(--ink);}
+</style>
+</head>
+<body>
+
+<section class="slide">
+
+  <header class="s-header">
+    <div class="brand">
+      <svg width="26" height="26" viewBox="0 0 64 64" fill="#101D33" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="10" width="6" height="6"/><rect x="10" y="18" width="6" height="6"/><rect x="18" y="26" width="6" height="6"/><path d="M 22 6 L 38 6 C 52 6 60 18 60 32 C 60 46 52 58 38 58 L 22 58 L 22 44 L 36 44 C 42 44 46 39 46 32 C 46 25 42 20 36 20 L 22 20 Z"/></svg>
+      <span class="wordmark">doutor-ai.com</span>
+    </div>
+    <span class="folio">PROPOSTA DE VALOR · <b>ARQUITETURA DO FLUXO</b></span>
+  </header>
+
+  <div class="kicker">PROPOSTA DE VALOR CENTRAL</div>
+
+  <h1>Não é uma ferramenta. É a arquitetura que dá <em>inteligência ao fluxo</em> — do PS ao desfecho.</h1>
+
+  <p class="lede">A partir da transcrição da consulta, a Doutor-AI passa a operar o fluxo hospitalar inteiro — pronto-socorro e internação. Todo paciente do PS tem <strong>dois desfechos possíveis: alta ou internação</strong>. A plataforma garante o melhor resultado clínico e financeiro nos dois caminhos.</p>
+
+  <div class="flow">
+
+    <div class="ps-node">
+      <div class="ps">PS</div>
+      <div class="ps-sub">PRONTO-SOCORRO<br>&amp; INTERNAÇÃO</div>
+      <div class="ps-q">Cada atendimento se resolve em um dos dois desfechos&nbsp;→</div>
+    </div>
+
+    <div class="connector">
+      <svg viewBox="0 0 96 560" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 0 280 C 40 280 40 165 84 165" stroke="#101D33" stroke-width="2.5"/>
+        <path d="M 84 159 L 94 165 L 84 171 Z" fill="#101D33"/>
+        <path d="M 0 280 C 40 280 40 395 84 395" stroke="#101D33" stroke-width="2.5"/>
+        <path d="M 84 389 L 94 395 L 84 401 Z" fill="#101D33"/>
+      </svg>
+    </div>
+
+    <div class="lanes">
+
+      <div class="lane">
+        <span class="tag">DESFECHO 01 · ALTA</span>
+        <div>
+          <h2><span class="n">01</span>Captação de linhas de cuidado</h2>
+          <p>A alta vira <strong>encaminhamento dentro da rede</strong> — ambulatório, exames e consultas. A receita relevante que esse paciente representa não se perde; e, na rede verticalizada, ele não deteriora por falta de apoio e visibilidade até voltar com um quadro pior — e muito mais caro.</p>
+          <div class="chips">
+            <span class="chip">AMBULATÓRIO</span><span class="chip">EXAMES</span><span class="chip">CONSULTAS</span>
+          </div>
+        </div>
+        <div class="metric">
+          <div class="num">+47<small>%</small></div>
+          <div class="cap">de incremento de receita com o funil de captação de linhas de cuidado.</div>
+        </div>
+      </div>
+
+      <div class="lane blue">
+        <span class="tag">DESFECHO 02 · INTERNAÇÃO</span>
+        <div>
+          <h2><span class="n">02</span>Gestão da probabilidade de internação</h2>
+          <p>Algoritmo proprietário calcula, <strong>durante o atendimento</strong>, a probabilidade de internação. Um kanban de internados abre, por paciente, um relatório de IA com todo o contexto — documentação e referências — explicando por que internar ou não. Score alto sem internação gera alerta: <strong>os dois lados da moeda cobertos</strong>.</p>
+          <div class="chips">
+            <span class="chip">SCORE EM TEMPO REAL</span><span class="chip">KANBAN DE INTERNADOS</span><span class="chip">RELATÓRIO COM REFERÊNCIAS</span>
+          </div>
+        </div>
+        <div class="metric">
+          <div class="num">−51<small>%</small></div>
+          <div class="cap">de glosas e/ou sinistros com a gestão de pertinência das internações.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="s-footer">
+    <span class="flabel">PARA REDES VERTICALIZADAS</span>
+    <p class="ftext">Interna-se <strong>quem deve, no momento certo</strong> — sem o custo de internações desnecessárias hoje, nem a reinternação mais longa e mais cara de quem deixou de ser internado. E a alta da internação também alimenta a captação de linhas de cuidado.</p>
+  </footer>
+
+</section>
+
+</body>
+</html>

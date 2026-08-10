@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate": "tsx migration/import.ts"
+    "migrate": "tsx migration/import.ts",
+    "exportar-1-0": "tsx migration/exportar-1-0.ts",
+    "provisionar": "tsx migration/provisionar-supabase.ts"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",

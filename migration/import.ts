@@ -68,12 +68,18 @@ export function normalizar(texto: string): string {
     .replace(/\s+/g, " ");
 }
 
+/** Nomes alternativos de arquivo por tabela (o 1.0 real usa alguns nomes maiores). */
+const ALIAS_ARQUIVO: Record<string, string[]> = {
+  closing_date_history: ["opportunity_closing_date_history"],
+};
+
 /** Lê um CSV do export; null se o arquivo não existir. Aceita nome.csv exato. */
 function lerCsv(tabela: string): { linhas: Linha[]; colunas: string[] } | null {
-  const candidatos = [
-    path.join(PASTA_EXPORTS, `${tabela}.csv`),
-    path.join(PASTA_EXPORTS, `${tabela}_rows.csv`), // padrão do botão Export do Supabase
-  ];
+  const nomes = [tabela, ...(ALIAS_ARQUIVO[tabela] ?? [])];
+  const candidatos = nomes.flatMap((n) => [
+    path.join(PASTA_EXPORTS, `${n}.csv`),
+    path.join(PASTA_EXPORTS, `${n}_rows.csv`), // padrão do botão Export do Supabase
+  ]);
   const arquivo = candidatos.find((c) => fs.existsSync(c));
   if (!arquivo) return null;
   const conteudo = fs.readFileSync(arquivo, "utf8");
@@ -253,6 +259,10 @@ const MAPA_QUALIFICACAO_CONTA: Record<string, string> = {
   contatado: "em_contato",
   contacted: "em_contato",
   in_contact: "em_contato",
+  // conta não tem "não responde"/"on-hold" no 2.0 — segue em contato,
+  // com o valor original preservado em origem_1_0 (aviso no relatório)
+  nao_responde: "em_contato",
+  on_hold: "em_contato",
   qualificado: "qualificada",
   qualified: "qualificada",
   oportunidade: "qualificada",
@@ -296,6 +306,7 @@ const MAPA_MOTIVO_PERDA: Record<string, string> = {
   sem_orcamento: "sem_orcamento",
   no_budget: "sem_orcamento",
   orcamento: "sem_orcamento",
+  falta_de_verba: "sem_orcamento",
   timing: "timing",
   sem_fit_tecnico: "sem_fit_tecnico",
   sem_fit: "sem_fit_tecnico",
@@ -310,18 +321,31 @@ const MAPA_MOTIVO_PERDA: Record<string, string> = {
   ghosting: "sem_resposta_definitiva",
 };
 
+// O 1.0 usava MÓDULOS como produto (triagem, navegacao, agendamento).
+// De-para proposto ao André (original sempre preservado em origem_1_0):
+//   triagem → PS Inteligente · navegacao/agendamento → Ambulatório
 const MAPA_PRODUTO: Record<string, string> = {
   ps_inteligente: "ps_inteligente",
   ps: "ps_inteligente",
   pronto_socorro: "ps_inteligente",
+  triagem: "ps_inteligente",
   ambulatorio: "ambulatorio",
   amb: "ambulatorio",
+  navegacao: "ambulatorio",
+  agendamento: "ambulatorio",
   ciclo_receita: "ciclo_receita",
   ciclo_da_receita: "ciclo_receita",
   cr: "ciclo_receita",
   revenue_cycle: "ciclo_receita",
   medicina_inteligente: "medicina_inteligente",
   mi: "medicina_inteligente",
+};
+
+const NOME_PRODUTO: Record<string, string> = {
+  ps_inteligente: "PS Inteligente",
+  ambulatorio: "Ambulatório",
+  ciclo_receita: "Ciclo da Receita",
+  medicina_inteligente: "Medicina Inteligente",
 };
 
 const MAPA_TEMPERATURA: Record<string, string> = {
@@ -353,10 +377,18 @@ const MAPA_ORIGEM: Record<string, string> = {
   partner: "parceiro",
   indicacao: "indicacao",
   referral: "indicacao",
+  recomendacao: "indicacao",
+  relacionamento: "outro", // sem equivalente direto — detalhe fica em origem_detalhe
   busca_ativa: "busca_ativa",
   outbound: "busca_ativa",
   prospeccao: "busca_ativa",
   inbound: "inbound",
+};
+
+// target_list.channel (1.0): direto | parceiro | nao_informado
+const MAPA_CANAL_ORIGEM: Record<string, string> = {
+  direto: "busca_ativa",
+  parceiro: "parceiro",
 };
 
 const MAPA_TIPO_ATIVIDADE: Record<string, string> = {
@@ -501,6 +533,9 @@ async function main() {
     "partner_contact_logs",
     "copilot_knowledge",
     "copilot_documents",
+    // tabelas-satélite do 1.0 (dims e origem viviam separadas dos leads)
+    "lead_org_details",
+    "lead_origins",
   ] as const;
 
   const csv: Partial<Record<(typeof NOMES)[number], { linhas: Linha[]; colunas: string[] }>> = {};
@@ -547,6 +582,42 @@ async function main() {
     const { data, error } = await db.from("contas").select("id, nome_normalizado");
     if (error) throw new Error(`Falha lendo contas: ${error.message}`);
     for (const c of data ?? []) contasExistentes.set(c.nome_normalizado as string, c.id as string);
+  }
+
+  // Responsável: o 1.0 usa slugs (chade, andre, roberto…). Hoje só o André tem
+  // perfil — slugs dele mapeiam para o perfil; os demais ficam preservados em
+  // origem_1_0 (novos vendedores ganham perfil quando o time crescer).
+  let perfilAndreId: string | null = null;
+  {
+    const { data } = await db
+      .from("perfis")
+      .select("id")
+      .eq("email", "andre.chade@doutor-ai.com")
+      .maybeSingle();
+    perfilAndreId = (data?.id as string | undefined) ?? null;
+    if (!perfilAndreId) {
+      avisos.push(
+        "Perfil do André ainda não existe (primeiro login pendente) — responsavel_id ficará vazio; rode a migração de novo após o login para preencher."
+      );
+    }
+  }
+  function resolverResponsavel(linha: Linha): string | null {
+    const bruto = pegar(linha, ["responsible", "responsavel"]);
+    if (!bruto) return null;
+    const v = normalizar(bruto);
+    return v === "chade" || v === "andre" || v === "andre chade" ? perfilAndreId : null;
+  }
+
+  // Satélites do 1.0, indexados por lead_id (enriquecem as contas)
+  const orgDetailsPorLead = new Map<string, Linha>();
+  for (const linha of csv.lead_org_details?.linhas ?? []) {
+    const ref = pegar(linha, ["lead_id"]);
+    if (ref) orgDetailsPorLead.set(ref, linha);
+  }
+  const origemPorLead = new Map<string, Linha>();
+  for (const linha of csv.lead_origins?.linhas ?? []) {
+    const ref = pegar(linha, ["lead_id"]);
+    if (ref) origemPorLead.set(ref, linha);
   }
   const parceirosPorNome = new Map<string, string>();
   {
@@ -677,12 +748,15 @@ async function main() {
         status_relacionamento: "na_mira",
         tipo: deDicionario(MAPA_TIPO_CONTA, pegar(linha, ["type", "tipo", "segment", "segmento"])),
         segmento: pegar(linha, ["segment", "segmento"]) ?? null,
+        // channel do 1.0 (direto|parceiro) indica a origem da abordagem
+        origem_tipo: deDicionario(MAPA_CANAL_ORIGEM, pegar(linha, ["channel", "canal"])),
         uf: pegar(linha, ["uf", "estado", "state"]) ?? null,
         cidade: pegar(linha, ["city", "cidade"]) ?? null,
         regiao: pegar(linha, ["region", "regiao"]) ?? null,
         contexto: pegar(linha, ["context", "contexto", "description", "descricao"]) ?? null,
         observacoes: pegar(linha, ["notes", "observacoes", "obs"]) ?? null,
         partner_id: acharParceiro(linha),
+        responsavel_id: resolverResponsavel(linha),
         legado_id_1_0: legado,
         origem_1_0: origemJson("target_list", linha),
       });
@@ -719,40 +793,82 @@ async function main() {
       const statusConta = deDicionario(MAPA_QUALIFICACAO_CONTA, qualificacao) ?? "na_mira";
       if (qualificacao && !deDicionario(MAPA_QUALIFICACAO_CONTA, qualificacao)) {
         avisos.push(`leads:${id1} — qualificação "${qualificacao}" desconhecida → status na_mira`);
+      } else if (qualificacao && ["nao_responde", "on_hold"].includes(normalizar(qualificacao))) {
+        avisos.push(
+          `leads:${id1} (${nome}) — qualificação "${qualificacao}" não existe para conta no 2.0 → em_contato (original preservado)`
+        );
       }
-      const origemBruta = pegar(linha, ["origin", "origem", "source", "lead_origin", "canal"]);
+
+      // Satélites: dimensionamento (lead_org_details) e origem (lead_origins)
+      const orgDetails = orgDetailsPorLead.get(id1);
+      const origemLinha = origemPorLead.get(id1);
+      const origemBruta =
+        pegar(origemLinha ?? {}, ["origin_type"]) ??
+        pegar(linha, ["origin", "origem", "source", "lead_origin", "canal"]);
+      const origemDetalhe: Record<string, unknown> = {};
+      if (origemLinha) {
+        for (const [k, v] of Object.entries(origemLinha)) {
+          if (!vazio(v) && !["id", "lead_id", "created_at", "updated_at"].includes(k)) {
+            origemDetalhe[k] = v;
+          }
+        }
+      }
+
+      const motivoPerdaLead = [
+        pegar(linha, ["loss_reason", "disqualification_reason", "motivo_desqualificacao", "lost_reason"]),
+        pegar(linha, ["loss_reason_detail", "motivo_detalhe"]),
+      ]
+        .filter(Boolean)
+        .join(" — ");
+
       prepararConta(nome, "leads", {
         status_relacionamento: statusConta,
         motivo_descarte:
-          statusConta === "descartada"
-            ? (pegar(linha, ["disqualification_reason", "motivo_desqualificacao", "lost_reason", "motivo"]) ??
-              qualificacao ??
-              null)
-            : null,
+          statusConta === "descartada" ? motivoPerdaLead || qualificacao || null : null,
         cnpj: pegar(linha, ["cnpj"]) ?? null,
-        tipo: deDicionario(MAPA_TIPO_CONTA, pegar(linha, ["type", "tipo", "org_type", "segment"])),
+        tipo:
+          deDicionario(MAPA_TIPO_CONTA, pegar(linha, ["type", "tipo", "segment"])) ??
+          deDicionario(MAPA_TIPO_CONTA, pegar(orgDetails ?? {}, ["org_type"])),
         segmento: pegar(linha, ["segment", "segmento"]) ?? null,
         arquetipo: pegar(linha, ["archetype", "arquetipo"]) ?? null,
         origem_tipo: deDicionario(MAPA_ORIGEM, origemBruta),
-        origem_detalhe: origemBruta ? { texto_1_0: origemBruta } : null,
-        partner_id: acharParceiro(linha),
+        origem_detalhe:
+          Object.keys(origemDetalhe).length > 0
+            ? origemDetalhe
+            : origemBruta
+              ? { texto_1_0: origemBruta }
+              : null,
+        partner_id:
+          acharParceiro(linha) ?? (origemLinha ? acharParceiro(origemLinha) : null),
         uf: pegar(linha, ["uf", "estado", "state"]) ?? null,
         cidade: pegar(linha, ["city", "cidade"]) ?? null,
         regiao: pegar(linha, ["region", "regiao"]) ?? null,
-        dim_leitos: num(pegar(linha, ["beds", "leitos", "dim_leitos", "num_beds"])),
-        dim_vidas: num(pegar(linha, ["lives", "vidas", "dim_vidas", "num_lives"])),
+        dim_leitos: num(pegar(orgDetails ?? {}, ["num_beds"]) ?? pegar(linha, ["beds", "leitos", "num_beds"])),
+        dim_vidas: num(
+          pegar(orgDetails ?? {}, ["num_beneficiaries"]) ?? pegar(linha, ["lives", "vidas", "num_lives"])
+        ),
         dim_atendimentos_mes: num(
-          pegar(linha, ["monthly_attendances", "atendimentos_mes", "atendimentos", "attendances"])
+          pegar(linha, ["average_appointments_per_month", "monthly_attendances", "atendimentos_mes"])
         ),
-        dim_hospitais: num(pegar(linha, ["hospitals", "hospitais", "num_hospitals"])),
-        dim_clinicas: num(pegar(linha, ["clinics", "clinicas", "num_clinics"])),
+        dim_hospitais: num(pegar(orgDetails ?? {}, ["num_hospitals"]) ?? pegar(linha, ["hospitals", "num_hospitals"])),
+        dim_clinicas: num(pegar(orgDetails ?? {}, ["num_clinics"]) ?? pegar(linha, ["clinics", "num_clinics"])),
         dim_cirurgias_exames: num(
-          pegar(linha, ["surgeries_exams", "cirurgias_exames", "cirurgias", "exames"])
+          pegar(orgDetails ?? {}, ["num_surgeries_exams"]) ?? pegar(linha, ["surgeries_exams", "cirurgias_exames"])
         ),
-        contexto: pegar(linha, ["context", "contexto", "description", "descricao"]) ?? null,
+        contexto: [
+          pegar(linha, ["context", "contexto", "description", "descricao"]),
+          pegar(orgDetails ?? {}, ["observations"]),
+        ]
+          .filter(Boolean)
+          .join("\n\n") || null,
         observacoes: pegar(linha, ["notes", "observacoes", "obs"]) ?? null,
+        responsavel_id: resolverResponsavel(linha),
         legado_id_1_0: legado,
-        origem_1_0: origemJson("leads", linha),
+        origem_1_0: {
+          ...origemJson("leads", linha),
+          ...(orgDetails ? { lead_org_details: origemJson("lead_org_details", orgDetails).dados } : {}),
+          ...(origemLinha ? { lead_origins: origemJson("lead_origins", origemLinha).dados } : {}),
+        },
       });
     }
   }
@@ -822,6 +938,17 @@ async function main() {
   // --------------------------------------------- 4 · OPORTUNIDADES ----------
   // Antes: última etapa real por deal, extraída dos movimentos do 1.0 (para
   // etapa_congelada / etapa_perda quando o deal não guarda a etapa).
+  // No 1.0 os movimentos são polimórficos: entity_type = lead | opportunity.
+  const ehMovimentoDeOpp = (linha: Linha): boolean => {
+    const tipo = pegar(linha, ["entity_type"]);
+    if (tipo) return normalizar(tipo) === "opportunity";
+    return Boolean(pegar(linha, ["opportunity_id", "oportunidade_id", "opp_id"]));
+  };
+  const refDaOpp = (linha: Linha): string | undefined =>
+    pegar(linha, ["entity_id", "opportunity_id", "oportunidade_id", "opp_id", "deal_id"]);
+  const refDoLead = (linha: Linha): string | undefined =>
+    pegar(linha, ["entity_id", "lead_id"]);
+
   const ultimaEtapaPorOpp = new Map<string, EtapaNova>();
   if (csv.funnel_movements) {
     const ordenados = [...csv.funnel_movements.linhas].sort((a, b) => {
@@ -830,7 +957,8 @@ async function main() {
       return da.localeCompare(dbb);
     });
     for (const linha of ordenados) {
-      const oppRef = pegar(linha, ["opportunity_id", "oportunidade_id", "opp_id", "deal_id"]);
+      if (!ehMovimentoDeOpp(linha)) continue;
+      const oppRef = refDaOpp(linha);
       if (!oppRef) continue;
       const destino = mapearEtapa(pegar(linha, ["to_stage", "para_etapa", "stage", "etapa", "new_stage"]));
       if (destino && destino !== "GANHA" && destino !== "PERDIDA" && destino !== "HOLD") {
@@ -856,8 +984,12 @@ async function main() {
         continue;
       }
 
+      // Conta: primeiro pelo vínculo forte (lead_id), depois pelo nome da empresa
       const empresa = pegar(linha, ["company", "empresa", "company_name", "account", "conta", "client", "cliente", "hospital"]);
-      const contaId = empresa ? contaIdPorNome.get(normalizar(empresa)) : undefined;
+      const leadRef = pegar(linha, ["lead_id"]);
+      const contaId =
+        (leadRef ? contaIdPorLead.get(leadRef) : undefined) ??
+        (empresa ? contaIdPorNome.get(normalizar(empresa)) : undefined);
       if (!contaId) {
         registrarPulo("opportunities", legado, `sem empresa reconhecível (company="${empresa ?? ""}")`);
         continue;
@@ -917,28 +1049,38 @@ async function main() {
         motivoPerdaDetalhe = casado && bruto && normalizar(bruto).replace(/[\s-]+/g, "_") === casado ? null : (bruto ?? "motivo não registrado no 1.0");
       }
 
-      const produtos = listaDe(pegar(linha, ["scope_products", "products", "produtos", "escopo"]))
-        .map((p) => deDicionario(MAPA_PRODUTO, p))
-        .filter((p): p is string => p != null);
-
-      const mrr = num(pegar(linha, ["mrr", "mrr_contratado", "monthly_value", "mrr_value"])) ?? 0;
-      const setup = num(pegar(linha, ["setup", "setup_valor", "setup_value", "setup_fee"]));
-      const meses = inteiro(pegar(linha, ["contract_months", "contrato_meses", "months", "meses", "vigencia"]));
-      const valor1 = num(pegar(linha, ["value", "valor", "total_value", "tcv"]));
-      if (valor1 != null) {
-        const tcvCalc = (setup ?? 0) + mrr * (meses ?? 12);
-        if (Math.abs(tcvCalc - valor1) > 1) {
-          conferenciasTcv.push({
-            deal: pegar(linha, ["name", "nome", "title"]) ?? legado,
-            valor1_0: valor1,
-            tcvCalculado: tcvCalc,
-          });
+      const produtosBrutos = listaDe(pegar(linha, ["scope_products", "products", "produtos", "escopo"]));
+      const produtos = [
+        ...new Set(
+          produtosBrutos
+            .map((p) => deDicionario(MAPA_PRODUTO, p))
+            .filter((p): p is string => p != null)
+        ),
+      ];
+      for (const bruto of produtosBrutos) {
+        if (!deDicionario(MAPA_PRODUTO, bruto)) {
+          avisos.push(`opportunities:${id1} — produto "${bruto}" sem mapeamento → fora do array (preservado em origem_1_0)`);
         }
       }
 
+      const mrr = num(pegar(linha, ["mrr", "mrr_contratado", "monthly_value", "mrr_value"])) ?? 0;
+      // O 1.0 não tem campo de setup — fica null (scope_service_value/benefits_value
+      // são conceitos distintos e permanecem preservados em origem_1_0)
+      const setup = num(pegar(linha, ["setup", "setup_valor", "setup_value", "setup_fee"]));
+      const meses = inteiro(pegar(linha, ["contract_months", "contrato_meses", "months", "meses", "vigencia"]));
+      const valor1 = num(pegar(linha, ["value", "valor", "total_value", "tcv"]));
+
+      // Nome: o 1.0 não tinha nome de deal — gera "Produto — Empresa"
       const nomeDeal =
         pegar(linha, ["name", "nome", "title", "deal_name"]) ??
-        `${produtos.length > 0 ? produtos[0] : "Deal"} — ${empresa}`;
+        `${produtos.length > 0 ? NOME_PRODUTO[produtos[0]] : "Deal"} — ${empresa ?? "conta"}`;
+
+      if (valor1 != null) {
+        const tcvCalc = (setup ?? 0) + mrr * (meses ?? 12);
+        if (Math.abs(tcvCalc - valor1) > 1) {
+          conferenciasTcv.push({ deal: nomeDeal, valor1_0: valor1, tcvCalculado: tcvCalc });
+        }
+      }
 
       novas.push({
         conta_id: contaId,
@@ -964,6 +1106,7 @@ async function main() {
         closing_date: somenteData(pegar(linha, ["closing_date", "close_date", "expected_close"])),
         forecast_categoria: "pipeline",
         temperatura: deDicionario(MAPA_TEMPERATURA, pegar(linha, ["manual_temperature", "temperature", "temperatura"])),
+        responsavel_id: resolverResponsavel(linha),
         partner_id: acharParceiro(linha),
         comissao_mrr_pct: num(pegar(linha, ["commission_mrr_pct", "comissao_mrr_pct", "commission"])),
         observacoes: pegar(linha, ["notes", "observacoes", "obs", "description", "descricao"]) ?? null,
@@ -978,7 +1121,7 @@ async function main() {
         economic_buyer: pegar(linha, ["economic_buyer", "meddic_economic_buyer"]) ?? null,
         decision_criteria: pegar(linha, ["decision_criteria", "meddic_decision_criteria"]) ?? null,
         decision_process: pegar(linha, ["decision_process", "meddic_decision_process"]) ?? null,
-        identify_pain: pegar(linha, ["identify_pain", "implicate_pain", "pain", "meddic_pain"]) ?? null,
+        identify_pain: pegar(linha, ["identify_pain", "meddic_identify_pain", "implicate_pain", "meddic_pain"]) ?? null,
         champion: pegar(linha, ["champion", "meddic_champion"]) ?? null,
         challenger_teaching: pegar(linha, ["challenger_teaching", "teaching"]) ?? null,
         challenger_tailoring: pegar(linha, ["challenger_tailoring", "tailoring"]) ?? null,
@@ -1105,6 +1248,29 @@ async function main() {
 
   const papeisNovos: Record<string, unknown>[] = [];
 
+  // lead → oportunidades do lead (para promover papéis de lead_stakeholders)
+  const oppsLegadoPorLead = new Map<string, string[]>();
+  for (const linha of csv.opportunities?.linhas ?? []) {
+    const leadRef = pegar(linha, ["lead_id"]);
+    const id1 = pegar(linha, ["id", "uuid"]);
+    if (!leadRef || !id1) continue;
+    const lista = oppsLegadoPorLead.get(leadRef) ?? [];
+    lista.push(id1);
+    oppsLegadoPorLead.set(leadRef, lista);
+  }
+
+  /** email/telefone às vezes vêm num campo único "contact"/"contact_info". */
+  function extrairContatoInfo(linha: Linha): { email: string | null; telefone: string | null } {
+    let email = pegar(linha, ["email", "e-mail"]) ?? null;
+    let telefone = pegar(linha, ["phone", "telefone", "celular", "whatsapp"]) ?? null;
+    const generico = pegar(linha, ["contact", "contact_info", "contato"]);
+    if (generico) {
+      if (!email && generico.includes("@")) email = generico;
+      else if (!telefone) telefone = generico;
+    }
+    return { email, telefone };
+  }
+
   function traduzirPapel(bruto: string | undefined): {
     papel: string;
     posicao: string | null;
@@ -1176,13 +1342,15 @@ async function main() {
       } else if (contatoId) {
         jaExistiam++; // pessoa já existe por (vínculo, nome) — não duplica
       } else {
+        const info = extrairContatoInfo(linha);
         novas.push({
           conta_id: contaId,
           parceiro_id: parceiroId,
           nome,
-          cargo: pegar(linha, ["role", "cargo", "position", "title", "job_title"]) ?? null,
-          email: pegar(linha, ["email", "e-mail"]) ?? null,
-          telefone: pegar(linha, ["phone", "telefone", "celular", "whatsapp"]) ?? null,
+          // no 1.0, "role" é o cargo; "position" é a classificação política
+          cargo: pegar(linha, ["role", "cargo", "title", "job_title"]) ?? null,
+          email: info.email,
+          telefone: info.telefone,
           linkedin: pegar(linha, ["linkedin", "linkedin_url"]) ?? null,
           instagram: pegar(linha, ["instagram", "instagram_url"]) ?? null,
           is_focal: ["true", "t", "1", "sim", "yes"].includes(
@@ -1194,16 +1362,26 @@ async function main() {
         });
       }
 
-      // papel ligado a oportunidade → papeis_no_deal (aplicado após inserção)
-      const papelBruto = pegar(linha, ["stakeholder_type", "type", "papel", "role_type", "classification"]);
-      if (oppRef && papelBruto) {
-        papeisNovos.push({
-          __legado_opp: `opportunities:${oppRef}`,
-          __chave_contato: chaveDedup,
-          __legado_contato: legado,
-          legado_id_1_0: `${tabela}_papel:${id1}`,
-          bruto: papelBruto,
-        });
+      // papel/posição → papeis_no_deal (aplicado após inserção dos contatos):
+      //   · stakeholders: ligados diretamente à oportunidade
+      //   · lead_stakeholders: promovidos para TODAS as oportunidades do lead
+      const papelBruto = pegar(linha, ["position", "stakeholder_type", "papel", "role_type", "classification"]);
+      if (papelBruto) {
+        const oppsAlvo = oppRef
+          ? [oppRef]
+          : leadRef
+            ? (oppsLegadoPorLead.get(leadRef) ?? [])
+            : [];
+        for (const alvo of oppsAlvo) {
+          papeisNovos.push({
+            __legado_opp: `opportunities:${alvo}`,
+            __chave_contato: chaveDedup,
+            __legado_contato: legado,
+            __herdado_do_lead: !oppRef,
+            legado_id_1_0: `${tabela}_papel:${id1}:${alvo}`,
+            bruto: papelBruto,
+          });
+        }
       }
     }
 
@@ -1249,7 +1427,11 @@ async function main() {
         contato_id: contatoId,
         papel: traduzido.papel,
         posicao: traduzido.posicao,
-        notas: traduzido.nota,
+        notas: p.__herdado_do_lead
+          ? [traduzido.nota, "herdado do lead no 1.0 (posição valia para a conta)"]
+              .filter(Boolean)
+              .join(" · ")
+          : traduzido.nota,
         legado_id_1_0: p.legado_id_1_0,
       });
     }
@@ -1266,6 +1448,14 @@ async function main() {
   }
 
   // --------------------------------------------- 6 · MOVIMENTOS (CRÍTICO) ---
+  // Movimentos de OPORTUNIDADE → oportunidade_movimentos (integral).
+  // Movimentos de LEAD (funil de prospecção — sem tabela própria no M1) são
+  // preservados no jsonb origem_1_0 da conta correspondente (zero perda);
+  // o M2 promove esse histórico quando o board de Prospecção nascer.
+  const movimentosDeLeadPorConta = new Map<string, Record<string, string>[]>();
+  let movimentosDeLeadTotal = 0;
+  let movimentosDeLeadSemConta = 0;
+
   if (csv.funnel_movements) {
     const { linhas } = csv.funnel_movements;
     const novas: Record<string, unknown>[] = [];
@@ -1274,11 +1464,36 @@ async function main() {
     for (const linha of linhas) {
       const id1 = pegar(linha, ["id", "uuid"]) ?? hashLinha(linha);
       const legado = `funnel_movements:${id1}`;
+
+      if (!ehMovimentoDeOpp(linha)) {
+        // movimento de LEAD → stash na conta
+        movimentosDeLeadTotal++;
+        const leadRef = refDoLead(linha);
+        const contaId = leadRef ? contaIdPorLead.get(leadRef) : undefined;
+        if (!contaId) {
+          movimentosDeLeadSemConta++;
+          registrarPulo(
+            "funnel_movements",
+            legado,
+            `movimento de lead ${leadRef ?? "?"} sem conta correspondente no 2.0`
+          );
+          continue;
+        }
+        const registro: Record<string, string> = { legado_id_1_0: legado };
+        for (const [k, v] of Object.entries(linha)) {
+          if (!vazio(v)) registro[k] = v;
+        }
+        const lista = movimentosDeLeadPorConta.get(contaId) ?? [];
+        lista.push(registro);
+        movimentosDeLeadPorConta.set(contaId, lista);
+        continue;
+      }
+
       if (legadoMovs.has(legado)) {
         jaExistiam++;
         continue;
       }
-      const oppRef = pegar(linha, ["opportunity_id", "oportunidade_id", "opp_id", "deal_id"]);
+      const oppRef = refDaOpp(linha);
       const oppId = oppRef ? oppIdPorLegado.get(`opportunities:${oppRef}`) : undefined;
       if (!oppId) {
         registrarPulo("funnel_movements", legado, `oportunidade ${oppRef ?? "?"} não encontrada no 2.0`);
@@ -1344,14 +1559,52 @@ async function main() {
     }
 
     const r = await inserirLote("oportunidade_movimentos", novas);
+    const lidasOpp = linhas.length - movimentosDeLeadTotal;
     contagens.push({
-      origem: "funnel_movements",
+      origem: "funnel_movements (entity_type=opportunity)",
       destino: "oportunidade_movimentos",
-      lidas: linhas.length,
+      lidas: lidasOpp,
       importadas: r.inseridas,
       jaExistiam,
-      naoImportadas: linhas.length - r.inseridas - jaExistiam,
+      naoImportadas: lidasOpp - r.inseridas - jaExistiam,
     });
+
+    // Grava o histórico de prospecção no jsonb da conta (idempotente: a chave
+    // é sempre recalculada por inteiro a partir da origem)
+    let contasComHistorico = 0;
+    for (const [contaId, lista] of movimentosDeLeadPorConta) {
+      const { data: atual } = await db
+        .from("contas")
+        .select("origem_1_0")
+        .eq("id", contaId)
+        .single();
+      const origemAtual = (atual?.origem_1_0 as Record<string, unknown> | null) ?? {};
+      const { error } = await db
+        .from("contas")
+        .update({
+          origem_1_0: {
+            ...origemAtual,
+            movimentos_prospeccao_1_0: lista.sort((a, b) =>
+              String(a.created_at ?? "").localeCompare(String(b.created_at ?? ""))
+            ),
+          },
+        })
+        .eq("id", contaId);
+      if (!error) contasComHistorico++;
+    }
+    contagens.push({
+      origem: "funnel_movements (entity_type=lead)",
+      destino: "contas.origem_1_0 (histórico de prospecção)",
+      lidas: movimentosDeLeadTotal,
+      importadas: movimentosDeLeadTotal - movimentosDeLeadSemConta,
+      jaExistiam: 0,
+      naoImportadas: movimentosDeLeadSemConta,
+    });
+    if (movimentosDeLeadTotal > 0) {
+      avisos.push(
+        `Movimentos de PROSPECÇÃO (lead) não têm tabela própria no M1 — ${movimentosDeLeadTotal - movimentosDeLeadSemConta} registros preservados em contas.origem_1_0 (${contasComHistorico} contas); o M2 promove esse histórico.`
+      );
+    }
   }
 
   // -------------------------------------------- 7 · CLOSING DATE HISTORY ----
@@ -1497,6 +1750,15 @@ async function main() {
         registrarPulo("sales_goals", legado, "não foi possível identificar o ano da meta");
         continue;
       }
+
+      // No 1.0: type = direct | partner; reference_id = slug de vendedor OU uuid de parceiro
+      const referencia = pegar(linha, ["reference_id", "referencia_id", "reference"]);
+      const refEhUuid = referencia ? /^[0-9a-f-]{36}$/i.test(referencia) : false;
+      const parceiroRef = refEhUuid ? parceiroIdPorLegado.get(`partners:${referencia}`) : undefined;
+      const vendedorRef =
+        referencia && ["chade", "andre"].includes(normalizar(referencia)) ? perfilAndreId : null;
+
+      const tipoBruto = pegar(linha, ["type", "tipo", "goal_type"]);
       const tipo =
         deDicionario(
           {
@@ -1504,19 +1766,24 @@ async function main() {
             company: "empresa",
             vendedor: "vendedor",
             seller: "vendedor",
+            direct: "vendedor", // metas "direct" do 1.0 referenciam vendedor
             parceiro: "parceiro",
             partner: "parceiro",
             canal: "canal",
             channel: "canal",
           },
-          pegar(linha, ["type", "tipo", "goal_type"])
+          tipoBruto
         ) ?? "empresa";
+
       novas.push({
         ano,
         trimestre: inteiro(pegar(linha, ["quarter", "trimestre", "q"])),
         tipo,
+        referencia_id: parceiroRef ?? vendedorRef ?? null,
         valor_mrr:
-          num(pegar(linha, ["mrr", "valor_mrr", "mrr_target", "target", "goal", "value", "valor", "amount"])) ?? 0,
+          num(
+            pegar(linha, ["annual_goal", "mrr", "valor_mrr", "mrr_target", "target", "goal", "value", "valor", "amount"])
+          ) ?? 0,
         legado_id_1_0: legado,
         origem_1_0: origemJson("sales_goals", linha),
       });
@@ -1550,7 +1817,7 @@ async function main() {
         `Registro ${tabela} ${id1.slice(0, 8)}`;
       novas.push({
         titulo,
-        conteudo: pegar(linha, ["content", "conteudo", "text", "texto", "body", "knowledge"]) ?? null,
+        conteudo: pegar(linha, ["content", "conteudo", "extracted_text", "text", "texto", "body", "knowledge"]) ?? null,
         categoria:
           pegar(linha, ["category", "categoria", "type", "tipo"]) ??
           (tabela === "copilot_documents" ? "documento_1_0" : null),

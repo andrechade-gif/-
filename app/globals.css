@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   Design tokens Doutor-AI (D5) — extraídos do design system do Sales Brain 1.0.
+   Primária: azul-médico profundo hsl(210 70% 35%) · Accent: teal hsl(175 60% 40%)
+   Sidebar sempre escura em azul profundo · dark mode completo via classe .dark
+   ========================================================================== */
+
+@layer base {
+  :root {
+    --background: 210 25% 97%;
+    --foreground: 215 30% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 30% 15%;
+    --muted: 210 22% 92%;
+    --muted-foreground: 215 14% 44%;
+    --border: 213 20% 87%;
+    --input: 213 20% 84%;
+    --ring: 210 70% 35%;
+
+    --primary: 210 70% 35%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 175 60% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 44%;
+    --destructive-foreground: 0 0% 100%;
+    --warning: 35 85% 42%;
+    --warning-foreground: 0 0% 100%;
+    --success: 152 55% 33%;
+    --success-foreground: 0 0% 100%;
+
+    --sidebar: 213 55% 12%;
+    --sidebar-foreground: 210 30% 96%;
+    --sidebar-muted: 213 20% 62%;
+    --sidebar-active: 213 45% 20%;
+    --sidebar-border: 213 40% 18%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 216 35% 8%;
+    --foreground: 210 22% 91%;
+    --card: 215 30% 12%;
+    --card-foreground: 210 22% 91%;
+    --muted: 215 25% 17%;
+    --muted-foreground: 215 14% 62%;
+    --border: 215 22% 21%;
+    --input: 215 22% 24%;
+    --ring: 210 75% 55%;
+
+    --primary: 210 72% 50%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 175 55% 42%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 60% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --warning: 35 85% 52%;
+    --warning-foreground: 216 35% 8%;
+    --success: 152 50% 42%;
+    --success-foreground: 216 35% 8%;
+
+    --sidebar: 216 45% 7%;
+    --sidebar-foreground: 210 30% 96%;
+    --sidebar-muted: 213 18% 58%;
+    --sidebar-active: 214 40% 16%;
+    --sidebar-border: 214 35% 14%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    min-height: 100%;
+    font-feature-settings: "cv02", "cv03";
+  }
+}
+
+@layer components {
+  /* Camada editorial: kickers/labels em monospace uppercase com tracking largo */
+  .kicker {
+    @apply font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground;
+  }
+
+  /* Números SEMPRE tabulares */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* KPI tile com borda de accent à esquerda */
+  .kpi-tile {
+    @apply rounded-lg border bg-card p-4 shadow-card;
+    border-left: 3px solid hsl(var(--accent));
+  }
+
+  /* Pill de status */
+  .pill {
+    @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium leading-4;
+  }
+
+  .campo {
+    @apply w-full rounded-md border border-input bg-card px-3 py-2 text-sm text-foreground shadow-none outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .rotulo {
+    @apply mb-1 block text-xs font-medium text-muted-foreground;
+  }
+
+  .botao-primario {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-soft transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .botao-secundario {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .botao-perigo {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive disabled:cursor-not-allowed disabled:opacity-50;
+  }
+}
+
+/* Scrollbars discretos (board do funil) */
+.scroll-fino::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.scroll-fino::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 8px;
+}
+.scroll-fino::-webkit-scrollbar-track {
+  background: transparent;
+}

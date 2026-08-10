@@ -8,8 +8,30 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
+// Config do setup: variável de ambiente OU config-setup.json na raiz do deploy
+// (fallback para o caso de o runtime da Vercel não carregar o .env.production).
+// O json NUNCA vai para o git — só existe nos arquivos do deploy de bootstrap.
+let configArquivo: Record<string, string> | null | undefined;
+
+function lerConfigArquivo(): Record<string, string> | null {
+  if (configArquivo !== undefined) return configArquivo;
+  try {
+    const caminho = path.join(process.cwd(), "config-setup.json");
+    configArquivo = fs.existsSync(caminho)
+      ? (JSON.parse(fs.readFileSync(caminho, "utf8")) as Record<string, string>)
+      : null;
+  } catch {
+    configArquivo = null;
+  }
+  return configArquivo;
+}
+
+export function envSetup(chave: string): string | undefined {
+  return process.env[chave] ?? lerConfigArquivo()?.[chave] ?? undefined;
+}
+
 export function validarSegredo(request: Request): Response | null {
-  const esperado = process.env.SETUP_SEGREDO;
+  const esperado = envSetup("SETUP_SEGREDO");
   if (!esperado) {
     return new Response("Não encontrado", { status: 404 });
   }

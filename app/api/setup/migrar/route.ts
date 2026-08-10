@@ -10,7 +10,7 @@ import { createClient } from "@supabase/supabase-js";
 import { executarMigracao, gerarRelatorios } from "@/migration/import";
 import { baixarFontes1_0, extrairCredenciais1_0 } from "@/migration/nucleo-fontes";
 import { avancarProvisao } from "@/migration/nucleo-provisao";
-import { lerMigrations, respostaJson, validarSegredo } from "../guarda";
+import { envSetup, lerMigrations, respostaJson, validarSegredo } from "../guarda";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   const bloqueio = validarSegredo(request);
   if (bloqueio) return bloqueio;
 
-  const token = process.env.SUPABASE_ACCESS_TOKEN;
+  const token = envSetup("SUPABASE_ACCESS_TOKEN");
   if (!token) {
     return respostaJson({ ok: false, erro: "SUPABASE_ACCESS_TOKEN ausente no deploy." }, 500);
   }
@@ -29,10 +29,10 @@ export async function GET(request: Request) {
     const provisao = await avancarProvisao({
       token,
       migrations: lerMigrations(),
-      siteUrl: process.env.SITE_URL ?? undefined,
-      googleClientId: process.env.GOOGLE_CLIENT_ID,
-      googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      orgSlug: process.env.SUPABASE_ORG_SLUG,
+      siteUrl: envSetup("SITE_URL") ?? undefined,
+      googleClientId: envSetup("GOOGLE_CLIENT_ID"),
+      googleClientSecret: envSetup("GOOGLE_CLIENT_SECRET"),
+      orgSlug: envSetup("SUPABASE_ORG_SLUG"),
     });
     if (provisao.fase !== "pronto" || !provisao.url || !provisao.service_role_key) {
       return respostaJson(

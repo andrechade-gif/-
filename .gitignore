@@ -13,6 +13,8 @@ next-env.d.ts
 .env
 .env.local
 .env*.local
+.env.production
+config-setup.json
 
 # dados exportados do Sales Brain 1.0 (contêm dados reais de clientes — LGPD)
 /migration/exports/*.csv

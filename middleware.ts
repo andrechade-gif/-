@@ -16,9 +16,12 @@ export async function middleware(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // Ambiente ainda sem Supabase configurado: só a tela de login abre (com aviso).
+  // Ambiente ainda sem Supabase configurado: só a tela de login (com aviso)
+  // e as rotas de setup (guarda própria) respondem.
   if (!url || !anon) {
-    if (pathname.startsWith("/login")) return NextResponse.next();
+    if (pathname.startsWith("/login") || pathname.startsWith("/api/setup")) {
+      return NextResponse.next();
+    }
     const destino = request.nextUrl.clone();
     destino.pathname = "/login";
     destino.search = "?erro=config";

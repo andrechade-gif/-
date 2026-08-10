@@ -6,7 +6,8 @@
 //   4. devolve contagens + os dois relatórios em markdown
 // Reexecutar é seguro: nada é duplicado nem sobrescrito.
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import * as crypto from "node:crypto";
 import { executarMigracao, gerarRelatorios } from "@/migration/import";
 import { baixarFontes1_0, extrairCredenciais1_0 } from "@/migration/nucleo-fontes";
 import { avancarProvisao } from "@/migration/nucleo-provisao";
@@ -14,6 +15,31 @@ import { envSetup, lerMigrations, respostaJson, validarSegredo } from "../guarda
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
+
+const EMAIL_ANDRE = "andre.chade@doutor-ai.com";
+
+/**
+ * Garante o usuário do André ANTES da migração: o trigger do banco o torna
+ * admin aprovado, e a migração passa a preencher responsavel_id nos registros.
+ * Retorna a senha inicial UMA única vez (quando o usuário é criado agora).
+ */
+async function garantirUsuarioAndre(
+  db: SupabaseClient
+): Promise<{ criado: boolean; senha_inicial?: string; erro?: string }> {
+  const senha = "SB2-" + crypto.randomBytes(9).toString("base64url");
+  const { error } = await db.auth.admin.createUser({
+    email: EMAIL_ANDRE,
+    password: senha,
+    email_confirm: true,
+    user_metadata: { full_name: "André Chade" },
+  });
+  if (!error) return { criado: true, senha_inicial: senha };
+  const mensagem = error.message.toLowerCase();
+  if (mensagem.includes("already") || mensagem.includes("registered") || error.status === 422) {
+    return { criado: false };
+  }
+  return { criado: false, erro: error.message };
+}
 
 export async function GET(request: Request) {
   const bloqueio = validarSegredo(request);
@@ -48,19 +74,23 @@ export async function GET(request: Request) {
       credenciais.chave
     );
 
-    // 3 · migração idempotente
+    // 3 · usuário admin do André (antes da migração, para responsavel_id)
     const db = createClient(provisao.url, provisao.service_role_key, {
       auth: { autoRefreshToken: false, persistSession: false },
     });
+    const usuarioAndre = await garantirUsuarioAndre(db);
+
+    // 4 · migração idempotente
     const dados = await executarMigracao(db, fontes);
 
-    // 4 · relatórios
+    // 5 · relatórios
     const relatorios = gerarRelatorios(dados);
 
     return respostaJson({
       ok: true,
       fonte_1_0: { url: credenciais.url, contagem, ausentes },
       supabase_2_0: { url: provisao.url, ref: provisao.ref },
+      usuario_andre: usuarioAndre,
       dados,
       relatorio_md: relatorios.relatorio,
       duplicatas_md: relatorios.duplicatas,

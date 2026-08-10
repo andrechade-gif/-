@@ -1,0 +1,31 @@
+# dependências
+/node_modules
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# produção
+/build
+
+# ambiente — segredos NUNCA são commitados
+.env
+.env.local
+.env*.local
+
+# dados exportados do Sales Brain 1.0 (contêm dados reais de clientes — LGPD)
+/migration/exports/*.csv
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# sistema
+.DS_Store
+*.pem
+
+# logs
+npm-debug.log*

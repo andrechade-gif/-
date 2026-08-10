@@ -507,6 +507,51 @@ function origemJson(tabela: string, linha: Linha): Record<string, unknown> {
 }
 
 // ============================================================== EXECUÇÃO ====
+
+/** Tabelas do 1.0 que a migração consome (satélites incluídas). */
+export const TABELAS_1_0 = [
+  "leads",
+  "target_list",
+  "opportunities",
+  "lead_stakeholders",
+  "stakeholders",
+  "partners",
+  "partner_contacts",
+  "sales_goals",
+  "funnel_movements",
+  "closing_date_history",
+  "lead_contact_logs",
+  "opportunity_contact_logs",
+  "partner_contact_logs",
+  "copilot_knowledge",
+  "copilot_documents",
+  // tabelas-satélite do 1.0 (dims e origem viviam separadas dos leads)
+  "lead_org_details",
+  "lead_origins",
+] as const;
+export type NomeTabela1_0 = (typeof TABELAS_1_0)[number];
+
+/** Fonte de dados em memória — vinda de CSVs (script) ou da API do 1.0 (runner). */
+export type Fontes = Partial<Record<NomeTabela1_0, { linhas: Linha[]; colunas?: string[] }>>;
+
+export interface DadosRelatorio {
+  contagens: ContagemEntidade[];
+  naoImportados: { origem: string; chave: string; motivo: string }[];
+  avisos: string[];
+  ausentes: string[];
+  conferenciasTcv: { deal: string; valor1_0: number; tcvCalculado: number }[];
+  pendentesRecategorizar: number;
+  suspeitas: { a: string; b: string; criterio: string }[];
+}
+
+function resetarColetores() {
+  contagens.length = 0;
+  naoImportados.length = 0;
+  avisos.length = 0;
+  arquivosAusentes.length = 0;
+  conferenciasTcv.length = 0;
+}
+
 async function main() {
   console.log("\n🧠 Sales Brain — migração 1.0 → 2.0\n");
 
@@ -517,49 +562,55 @@ async function main() {
   }
 
   // ------------------------------------------------ 0 · carregar os CSVs ----
-  const NOMES = [
-    "leads",
-    "target_list",
-    "opportunities",
-    "lead_stakeholders",
-    "stakeholders",
-    "partners",
-    "partner_contacts",
-    "sales_goals",
-    "funnel_movements",
-    "closing_date_history",
-    "lead_contact_logs",
-    "opportunity_contact_logs",
-    "partner_contact_logs",
-    "copilot_knowledge",
-    "copilot_documents",
-    // tabelas-satélite do 1.0 (dims e origem viviam separadas dos leads)
-    "lead_org_details",
-    "lead_origins",
-  ] as const;
-
-  const csv: Partial<Record<(typeof NOMES)[number], { linhas: Linha[]; colunas: string[] }>> = {};
+  const csv: Fontes = {};
   let algumArquivo = false;
-  for (const nome of NOMES) {
+  for (const nome of TABELAS_1_0) {
     const lido = lerCsv(nome);
     if (lido) {
       csv[nome] = lido;
       algumArquivo = true;
       console.log(`  · ${nome}.csv — ${lido.linhas.length} linhas · colunas: ${lido.colunas.join(", ")}`);
-    } else {
-      arquivosAusentes.push(nome);
     }
   }
   if (!algumArquivo) {
     console.error(
       `\n✖ Nenhum CSV encontrado em migration/exports/.\n` +
-        `  Exporte as tabelas do Supabase do 1.0 (Table Editor → Export data → CSV)\n` +
-        `  e salve os arquivos como <tabela>.csv nessa pasta. Depois rode npm run migrate de novo.\n`
+        `  Rode npm run exportar-1-0 (ou exporte manualmente pelo painel do Supabase 1.0)\n` +
+        `  e depois rode npm run migrate de novo.\n`
     );
     process.exit(1);
   }
+
+  const dados = await executarMigracao(db, csv);
+  const { relatorio, duplicatas } = gerarRelatorios(dados);
+  fs.writeFileSync(ARQ_RELATORIO, relatorio, "utf8");
+  fs.writeFileSync(ARQ_DUPLICATAS, duplicatas, "utf8");
+
+  console.log("\n──────────────────────────────────────────────");
+  for (const c of dados.contagens) {
+    console.log(
+      `  ${c.origem} → ${c.destino}: ${c.importadas} importadas · ${c.jaExistiam} já existiam · ${Math.max(0, c.naoImportadas)} fora`
+    );
+  }
+  console.log(`\n  Deals aguardando recategorização: ${dados.pendentesRecategorizar}`);
+  console.log(`  Duplicatas prováveis de conta: ${dados.suspeitas.length}`);
+  console.log(`\n✔ Relatórios: migration/relatorio.md · migration/relatorio-duplicatas.md\n`);
+}
+
+/**
+ * Núcleo da migração — recebe o cliente do banco 2.0 (service role) e as
+ * fontes do 1.0 já em memória. Usado pelo script local (CSVs) e pelo runner
+ * de setup na Vercel (JSON direto da API do 1.0).
+ */
+export async function executarMigracao(cliente: SupabaseClient, csv: Fontes): Promise<DadosRelatorio> {
+  db = cliente;
+  resetarColetores();
+
+  for (const nome of TABELAS_1_0) {
+    if (!csv[nome]) arquivosAusentes.push(nome);
+  }
   if (arquivosAusentes.length > 0) {
-    console.log(`  ⚠ ausentes (seguem fora da migração): ${arquivosAusentes.join(", ")}`);
+    console.log(`  ⚠ fontes ausentes (seguem fora da migração): ${arquivosAusentes.join(", ")}`);
   }
 
   // ------------------------------------- 1 · estado atual (idempotência) ----
@@ -1862,10 +1913,23 @@ async function main() {
     }
   }
 
-  // ------------------------------------------------- 12 · RELATÓRIOS --------
+  // -------------------------------------------------- dados do relatório ----
+  return {
+    contagens: [...contagens],
+    naoImportados: [...naoImportados],
+    avisos: [...avisos],
+    ausentes: [...arquivosAusentes],
+    conferenciasTcv: [...conferenciasTcv],
+    pendentesRecategorizar,
+    suspeitas,
+  };
+}
+
+/** Gera os dois relatórios em markdown a partir dos dados da execução. */
+export function gerarRelatorios(d: DadosRelatorio): { relatorio: string; duplicatas: string } {
   const agora = new Date().toISOString();
 
-  const duplicatasMd = [
+  const duplicatas = [
     "# Duplicatas prováveis de contas — revisão humana",
     "",
     `Gerado em ${agora} pelo \`npm run migrate\`.`,
@@ -1875,17 +1939,16 @@ async function main() {
     "funda manualmente (mova oportunidades/contatos e apague a sobra) — ou peça isso",
     "ao Claude no próximo módulo.",
     "",
-    suspeitas.length === 0
+    d.suspeitas.length === 0
       ? "_Nenhuma suspeita encontrada._"
       : ["| Conta A | Conta B | Critério |", "|---|---|---|"]
-          .concat(suspeitas.map((s) => `| ${s.a} | ${s.b} | ${s.criterio} |`))
+          .concat(d.suspeitas.map((s) => `| ${s.a} | ${s.b} | ${s.criterio} |`))
           .join("\n"),
     "",
   ].join("\n");
-  fs.writeFileSync(ARQ_DUPLICATAS, duplicatasMd, "utf8");
 
-  const totalNaoImportadas = contagens.reduce((s, c) => s + Math.max(0, c.naoImportadas), 0);
-  const relatorioMd = [
+  const totalNaoImportadas = d.contagens.reduce((s, c) => s + Math.max(0, c.naoImportadas), 0);
+  const relatorio = [
     "# Relatório de migração — Sales Brain 1.0 → 2.0",
     "",
     `Execução: ${agora} · Script: \`migration/import.ts\` (idempotente — re-execução não duplica)`,
@@ -1894,7 +1957,7 @@ async function main() {
     "",
     "| Origem (1.0) | Destino (2.0) | Linhas lidas | Importadas | Já existiam | Não importadas |",
     "|---|---|---:|---:|---:|---:|",
-    ...contagens.map(
+    ...d.contagens.map(
       (c) =>
         `| ${c.origem} | ${c.destino} | ${c.lidas} | ${c.importadas} | ${c.jaExistiam} | ${Math.max(0, c.naoImportadas)} |`
     ),
@@ -1902,18 +1965,18 @@ async function main() {
     "“Já existiam” = pulados por idempotência (mesma chave legado) ou deduplicação legítima",
     "(mesma empresa em leads+target_list; mesma pessoa no mesmo vínculo).",
     "",
-    "## Arquivos ausentes no export",
+    "## Fontes ausentes no export",
     "",
-    arquivosAusentes.length === 0
-      ? "_Todos os CSVs esperados estavam presentes._"
-      : arquivosAusentes.map((a) => `- \`${a}.csv\` — não encontrado em migration/exports/ (seguiu sem ele)`).join("\n"),
+    d.ausentes.length === 0
+      ? "_Todas as tabelas esperadas estavam presentes._"
+      : d.ausentes.map((a) => `- \`${a}\` — não encontrada (a migração seguiu sem ela)`).join("\n"),
     "",
     "## Registros NÃO importados e por quê",
     "",
-    naoImportados.length === 0
+    d.naoImportados.length === 0
       ? "_Nenhum registro ficou de fora._"
       : ["| Origem | Registro | Motivo |", "|---|---|---|"]
-          .concat(naoImportados.map((n) => `| ${n.origem} | ${n.chave} | ${n.motivo} |`))
+          .concat(d.naoImportados.map((n) => `| ${n.origem} | ${n.chave} | ${n.motivo} |`))
           .join("\n"),
     "",
     "## Conferência de TCV (campo `value` do 1.0 × TCV calculado)",
@@ -1921,11 +1984,11 @@ async function main() {
     "O `value` do 1.0 NÃO é importado como campo (decisão D3: TCV é sempre calculado =",
     "setup + MRR × meses, com 12 meses como padrão). Diferenças acima de R$ 1:",
     "",
-    conferenciasTcv.length === 0
+    d.conferenciasTcv.length === 0
       ? "_Todos os valores conferem (ou o 1.0 não tinha `value`)._"
       : ["| Deal | value (1.0) | TCV calculado (2.0) |", "|---|---:|---:|"]
           .concat(
-            conferenciasTcv.map(
+            d.conferenciasTcv.map(
               (c) => `| ${c.deal} | ${c.valor1_0.toLocaleString("pt-BR")} | ${c.tcvCalculado.toLocaleString("pt-BR")} |`
             )
           )
@@ -1933,16 +1996,16 @@ async function main() {
     "",
     "## Recategorização pendente",
     "",
-    `**${pendentesRecategorizar} deals on-hold** vieram com motivo genérico e aguardam`,
+    `**${d.pendentesRecategorizar} deals on-hold** vieram com motivo genérico e aguardam`,
     "recategorização assistida em **/migracao/pendencias** (taxonomia do blueprint §2.4).",
     "",
     "## Avisos do mapeamento",
     "",
-    avisos.length === 0 ? "_Nenhum aviso._" : avisos.map((a) => `- ${a}`).join("\n"),
+    d.avisos.length === 0 ? "_Nenhum aviso._" : d.avisos.map((a) => `- ${a}`).join("\n"),
     "",
     "## Duplicatas prováveis",
     "",
-    `${suspeitas.length} suspeitas — ver \`migration/relatorio-duplicatas.md\` (nada foi fundido automaticamente).`,
+    `${d.suspeitas.length} suspeitas — ver \`migration/relatorio-duplicatas.md\` (nada foi fundido automaticamente).`,
     "",
     "## Declaração de zero perda",
     "",
@@ -1951,17 +2014,8 @@ async function main() {
       : `⚠ ${totalNaoImportadas} registros não importados — todos listados acima com justificativa. As colunas originais dos importados estão preservadas em \`origem_1_0\` (jsonb).`,
     "",
   ].join("\n");
-  fs.writeFileSync(ARQ_RELATORIO, relatorioMd, "utf8");
 
-  console.log("\n──────────────────────────────────────────────");
-  for (const c of contagens) {
-    console.log(
-      `  ${c.origem} → ${c.destino}: ${c.importadas} importadas · ${c.jaExistiam} já existiam · ${Math.max(0, c.naoImportadas)} fora`
-    );
-  }
-  console.log(`\n  Deals aguardando recategorização: ${pendentesRecategorizar}`);
-  console.log(`  Duplicatas prováveis de conta: ${suspeitas.length}`);
-  console.log(`\n✔ Relatórios: migration/relatorio.md · migration/relatorio-duplicatas.md\n`);
+  return { relatorio, duplicatas };
 }
 
 // Só executa quando chamado diretamente (npm run migrate) — os helpers acima

@@ -72,7 +72,7 @@ Definidos como variáveis CSS em `app/globals.css` e mapeados em `tailwind.confi
 
 | Módulo | Escopo (blueprint §5) | Estado |
 |---|---|---|
-| M1 | Fundação técnica + Funil de Vendas + migração 1.0 + auth + deploy | 🔄 **em construção** (esta sessão) |
+| M1 | Fundação técnica + Funil de Vendas + migração 1.0 + auth + deploy | ✅ **concluído** (10/ago/2026 — em produção, dados migrados) |
 | M2 | Prospecção (board de contas) + perfil completo de Conta + UI de stakeholders | ⬜ pendente |
 | M3 | UI de MEDDIC scorecard + cobertura do comitê + briefing pré-reunião | ⬜ pendente |
 | M4 | Ingestão automática (Drive/Read AI/Plaud) + extração LLM + Inbox de Aprovações | ⬜ pendente |
@@ -88,6 +88,19 @@ Schemas que já nasceram no M1 mas só ganham UI depois: `papeis_no_deal` (M2),
 Portal CS), `metas` (M5), `parceiros` (M7), `conhecimento` (M9).
 
 ## Deploy
+
+**Estado atual (M1, 10/ago/2026):**
+- **Produção:** https://sales-brain-doutor-ai.vercel.app (projeto `sales-brain`, time
+  `doutor-ai`, deploy por bootstrap-clone desta branch — os arquivos enviados no deploy
+  contêm só `package.json` + `vercel.json` + `.env.production`; o install clona o repo).
+- **Supabase 2.0:** projeto `sales-brain`, ref `ygwgxhbigytdnlnmargt`, região sa-east-1,
+  na organização Supabase do André. Schema aplicado (migrations 0001–0004), Auth com
+  e-mail/senha (auto-confirmação ligada) — Google OAuth pendente de credenciais.
+- **Migração:** executada em produção com relatórios em `migration/relatorio.md` e
+  `migration/relatorio-duplicatas.md`. Rodada via runner de setup (`app/api/setup/*` —
+  rotas mortas em produção: `SETUP_SEGREDO` não é definido no deploy final).
+- **Atenção:** o repositório é PÚBLICO e o deploy clona dele; se for privado no futuro,
+  conectar o repo ao projeto Vercel via dashboard (Settings → Git) antes.
 
 1. **Env vars** (ver `.env.example`): `NEXT_PUBLIC_SUPABASE_URL`,
    `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (server-only),

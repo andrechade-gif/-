@@ -6,7 +6,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const ROTAS_PUBLICAS = ["/login", "/auth", "/acesso-pendente", "/solicitar-acesso"];
+// /api/setup tem guarda própria (segredo + só existe no deploy de bootstrap)
+const ROTAS_PUBLICAS = ["/login", "/auth", "/acesso-pendente", "/solicitar-acesso", "/api/setup"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

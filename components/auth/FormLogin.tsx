@@ -34,7 +34,12 @@ export function FormLogin() {
       },
     });
     if (error) {
-      setErro("Não foi possível iniciar o login com Google.");
+      const providerDesligado = /not enabled|unsupported provider/i.test(error.message);
+      setErro(
+        providerDesligado
+          ? "O login com Google ainda não foi ativado neste ambiente. Entre com e-mail e senha logo abaixo."
+          : "Não foi possível iniciar o login com Google. Tente de novo ou entre com e-mail e senha."
+      );
       setCarregando(null);
     }
   }

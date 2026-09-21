@@ -1,0 +1,16 @@
+{
+  "sales_brain_url": "https://qieinndhyngeruxaqomd.supabase.co/functions/v1/ingest-whatsapp",
+  "ingest_api_key": "COLE_AQUI_O_INGEST_API_KEY_CADASTRADO_NO_LOVABLE",
+  "whatsapp_db_path": "~/whatsapp-mcp/whatsapp-bridge/store/messages.db",
+  "state_path": "~/.whatsapp-sync/state.json",
+  "device": "mac-andre",
+  "owner_phone": "5511999999999",
+  "batch_size": 200,
+  "include_groups": false,
+  "initial_lookback_days": 7,
+  "loop_interval_seconds": 60,
+  "request_timeout_seconds": 60,
+  "local_ignore_jids": [
+    "5511988887777@s.whatsapp.net"
+  ]
+}

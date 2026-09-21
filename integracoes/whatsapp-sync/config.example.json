@@ -4,7 +4,7 @@
   "whatsapp_db_path": "~/whatsapp-mcp/whatsapp-bridge/store/messages.db",
   "state_path": "~/.whatsapp-sync/state.json",
   "device": "mac-andre",
-  "owner_phone": "5511999999999",
+  "owner_phone": "5518998145192",
   "batch_size": 200,
   "include_groups": false,
   "initial_lookback_days": 7,

@@ -22,7 +22,20 @@ pareada com o número desejado (Aparelhos conectados → Conectar aparelho).
 Para ler dois números, rode duas instâncias da ponte com `store/` separados e
 duas configs do sidecar com `device` diferente.
 
-## Instalação
+## Instalação em um comando
+
+No Mac onde a ponte whatsapp-mcp está pareada, com o repositório clonado:
+
+```bash
+cd integracoes/whatsapp-sync
+INGEST_API_KEY='<valor do secret INGEST_API_KEY ou SALES_BRAIN_API_KEY no Lovable>' bash install.sh
+```
+
+O `install.sh` copia o script, grava `~/.whatsapp-sync/config.json` (telefone 5518998145192,
+30 dias de histórico), faz a primeira rodada para validar a chave e carrega o launchd
+a cada 2 minutos. Variáveis opcionais: `OWNER_PHONE`, `DEVICE`, `LOOKBACK_DAYS`, `WHATSAPP_DB_PATH`.
+
+## Instalação manual
 
 ```bash
 mkdir -p ~/whatsapp-sync ~/.whatsapp-sync ~/Library/Logs

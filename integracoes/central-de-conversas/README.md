@@ -42,24 +42,26 @@ aba **Interações** nos diálogos de lead e oportunidade.
 Regras fixas: nunca rebaixa estágio, nunca sobrescreve campo já preenchido de um contato,
 tudo fica auditado em `interaction_events.applied_actions`.
 
+## Como as fontes chegam hoje
+
+- **WhatsApp**: sidecar no Mac (única peça que precisa ser instalada por você).
+- **Read AI, Gmail e Google Calendar**: uma rotina Claude ("Sales Brain · Central de
+  Conversas") roda de hora em hora, lê as fontes pelas contas já conectadas e grava em
+  `interaction_events`. Não precisa de webhook no Read AI nem de conector Google no Lovable.
+  Se um dia esses conectores forem ligados no Lovable, as funções nativas assumem sem
+  duplicar (mesmos `dedupe_key`).
+- Telefone 5518998145192 já está cadastrado como destinatário (categoria `conversas`) e
+  como telefone interno.
+
 ## Passos manuais (uma vez)
 
-1. **Secrets no Lovable** (Sales Brain → Cloud → Secrets):
-   - `INGEST_API_KEY`: chave forte que o sidecar do Mac usa. Gere com `openssl rand -hex 32`.
-   - `READAI_WEBHOOK_SECRET`: token que vai na URL do webhook do Read AI. Gere da mesma forma.
-2. **Sidecar do WhatsApp no Mac**: seguir `../whatsapp-sync/README.md` (copiar script, config
-   com o `INGEST_API_KEY`, carregar o launchd). Em 2 minutos o card "WhatsApp" em
-   /conversas → Fontes fica verde.
-3. **Read AI**: em app.read.ai → Configurações → Integrações → Webhooks, adicionar
-   `https://qieinndhyngeruxaqomd.supabase.co/functions/v1/ingest-meeting?token=<READAI_WEBHOOK_SECRET>`
-   para o evento de fim de reunião. Fazer o mesmo na conta do Mauricio, se as reuniões dele
-   também devem entrar.
-4. **Gmail, Google Calendar e Google Drive**: no workspace Lovable (Doutor-AI) → Conectores,
-   conectar os três com a conta `andre.chade@doutor-ai.com`. Sem isso, as fontes Gmail e
-   Calendar ficam em "Conector não conectado" e o resto segue funcionando.
-5. **Destinatário do aviso de novo lead**: em /sinais-apollo → Notificações, ativar o
-   destinatário André Chade, preencher o telefone e marcar a categoria `conversas`.
-6. **Contexto histórico**: em /conversas → Fontes, "Recarregar identidades do CRM" garante
+1. **Chave do sidecar**: em Lovable → Sales Brain → Cloud → Secrets, copie o valor de
+   `SALES_BRAIN_API_KEY` (já aceito pelo `ingest-whatsapp`) ou crie `INGEST_API_KEY`.
+2. **Sidecar do WhatsApp no Mac**: `cd integracoes/whatsapp-sync && INGEST_API_KEY='<chave>' bash install.sh`.
+   Em 2 minutos o card "WhatsApp" em /conversas → Fontes fica verde.
+3. **Opcional**: webhook do Read AI (`ingest-meeting?token=<READAI_WEBHOOK_SECRET>`) e conectores
+   Google no Lovable, para o caminho nativo em vez da rotina Claude.
+4. **Contexto histórico**: em /conversas → Fontes, "Recarregar identidades do CRM" garante
    que todos os telefones e e-mails já cadastrados sejam reconhecidos. Para importar
    conversas antigas do WhatsApp, rodar `whatsapp_sync.py --reset-cursor 90` e depois `--once`.
 
